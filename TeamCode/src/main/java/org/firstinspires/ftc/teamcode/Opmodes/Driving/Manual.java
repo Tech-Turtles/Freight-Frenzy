@@ -63,7 +63,7 @@ public class Manual extends RobotHardware {
         stateMachine.init();
         headingController.setInputBounds(-Math.PI, Math.PI);
         mecanumDrive = new SampleMecanumDrive(hardwareMap);
-        trajectoryRR = new TrajectoryRR(this.mecanumDrive);
+//        trajectoryRR = new TrajectoryRR(this.mecanumDrive);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Manual extends RobotHardware {
         @Override
         public void update() {
             super.update();
-            opMode.drivetrainAdvancedControls();
+            opMode.drivetrainStandardControls();
         }
     }
 
