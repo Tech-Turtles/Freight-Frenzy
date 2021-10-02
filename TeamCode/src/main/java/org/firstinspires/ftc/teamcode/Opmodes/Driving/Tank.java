@@ -18,9 +18,6 @@ public class Tank extends RobotHardware {
     DcMotor fRight;
     DcMotor bRight;
 
-
-    public static boolean useEncoders = false;
-
     private final StringBuilder builder = new StringBuilder();
 
     @Override
@@ -42,17 +39,10 @@ public class Tank extends RobotHardware {
         bRight.setPower(rightPower);
 
         if(primary.YOnce()) {
-            if(useEncoders) {
-                fLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                bLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                fRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                bRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            } else {
-                fLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                bLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                fRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                bRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
+            fLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            bLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            fRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            bRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         for (Motors motor : Motors.values()) {

@@ -373,11 +373,11 @@ public class RobotHardware extends OpMode {
 
     @Override
     public void init() {
-        dashboard = FtcDashboard.getInstance();
-        dashboard.setTelemetryTransmissionInterval(25);
-
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
-        packet = new TelemetryPacket();
+//        dashboard = FtcDashboard.getInstance();
+//        dashboard.setTelemetryTransmissionInterval(25);
+//
+//        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
+//        packet = new TelemetryPacket();
 
         try {
             expansionHub1 = hardwareMap.get(LynxModule.class, ExpansionHubs.HUB1.getHub());
@@ -388,6 +388,7 @@ public class RobotHardware extends OpMode {
         } catch (IllegalArgumentException | NullPointerException e) {
             if(packet != null)
                 packet.put("Error: ", e.getMessage());
+            Log.wtf("RobotHardware: ", e.getMessage());
         }
         clearHubCache();
 
