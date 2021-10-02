@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareTypes;
 
 public enum ColorSensor {
-    WOBBLE_SENSOR("colorSensor");
+    ;
 
     String name;
 

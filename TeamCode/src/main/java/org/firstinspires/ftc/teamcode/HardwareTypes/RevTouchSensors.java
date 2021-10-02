@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareTypes;
 
 public enum RevTouchSensors {
-    WOBBLE_TOUCH("wobbleTouch");
+    ;
 
     private final String configName;
 

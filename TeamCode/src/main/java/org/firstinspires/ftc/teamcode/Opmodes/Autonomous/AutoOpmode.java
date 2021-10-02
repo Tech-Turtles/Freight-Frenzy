@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Opmodes.Autonomous;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.HardwareTypes.Motors;
 import org.firstinspires.ftc.teamcode.Utility.*;
@@ -22,38 +21,38 @@ public class AutoOpmode extends RobotHardware {
     private Executive.RobotStateMachineContextInterface robotStateContext;
     public RingDetectionAmount initializationRingDetectionAmount = null;
 
-    @Autonomous(name="Wall Red", group="A")
+    @Autonomous(name="Red Carousel", group="A")
     public static class AutoRedPickup extends AutoOpmode {
         @Override public void init() {
             robotColor = AllianceColor.RED;
-            robotStartPos = StartPosition.WALL;
+            robotStartPos = StartPosition.CAROUSEL;
             super.init();
         }
     }
 
-    @Autonomous(name="Center Red", group="A")
+    @Autonomous(name="Red Depot", group="A")
     public static class AutoRedBuild extends AutoOpmode {
         @Override public void init() {
             robotColor = AllianceColor.RED;
-            robotStartPos = StartPosition.CENTER;
+            robotStartPos = StartPosition.DEPOT;
             super.init();
         }
     }
 
-    @Autonomous(name="Wall Blue", group="A")
+    @Autonomous(name="Blue Carousel", group="A")
     public static class AutoBluePickup extends AutoOpmode {
         @Override public void init() {
             robotColor = AllianceColor.BLUE;
-            robotStartPos = StartPosition.WALL;
+            robotStartPos = StartPosition.CAROUSEL;
             super.init();
         }
     }
 
-    @Autonomous(name="Center Blue", group="A")
+    @Autonomous(name="Blue Depot", group="A")
     public static class AutoBlueBuild extends AutoOpmode {
         @Override public void init() {
             robotColor = AllianceColor.BLUE;
-            robotStartPos = StartPosition.CENTER;
+            robotStartPos = StartPosition.DEPOT;
             super.init();
         }
     }
@@ -62,11 +61,9 @@ public class AutoOpmode extends RobotHardware {
     public void init() {
         super.init();
         robotStateContext = new RobotStateContext(this, robotColor, robotStartPos);
-        new Thread(this::loadVision).start();
+//        new Thread(this::loadVision).start();
         mecanumDrive = new SampleMecanumDrive(hardwareMap);
         mecanumDrive.setPoseEstimate(new Pose2d(0, 0, 0));
-
-        motorUtility.setPIDFCoefficientsCompensated(Motors.LAUNCHER, DcMotor.RunMode.RUN_USING_ENCODER, Configuration.pidfCoeffFeedForward);
 
         robotStateContext.init();
         telemetry.addData("Initialization: ", "Successful!");

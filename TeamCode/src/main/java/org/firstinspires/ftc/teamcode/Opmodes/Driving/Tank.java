@@ -26,7 +26,7 @@ public class Tank extends RobotHardware {
         builder.setLength(0);
 
         double leftPower  = Range.clip(-gamepad1.left_stick_y + gamepad1.left_stick_x, -1.0, 1.0) ;
-        double rightPower = Range.clip(-gamepad1.left_stick_y - gamepad1.left_stick_x, -1.0, 1.0) ;
+        double rightPower = Range.clip(-gamepad1.right_stick_y + gamepad1.right_stick_x, -1.0, 1.0) ;
 
         fLeft = hardwareMap.get(DcMotor.class, "front left");
         bLeft = hardwareMap.get(DcMotor.class, "back left");

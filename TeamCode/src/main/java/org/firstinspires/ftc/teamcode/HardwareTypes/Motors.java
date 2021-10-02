@@ -9,11 +9,7 @@ public enum Motors {
     FRONT_LEFT( "front left",   ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
     FRONT_RIGHT("front right",  ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
     BACK_LEFT(  "back left",    ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
-    BACK_RIGHT( "back right",   ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
-
-    INTAKE("intake", ExpansionHubs.HUB2, MotorTypes.OTHER, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.FLOAT, RunMode.RUN_WITHOUT_ENCODER),
-    LAUNCHER("launcher", ExpansionHubs.HUB2, MotorTypes.OTHER, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.FLOAT, RunMode.RUN_USING_ENCODER),
-    WOBBLE_ARM("wobble arm", ExpansionHubs.HUB2, MotorTypes.OTHER, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_USING_ENCODER);
+    BACK_RIGHT( "back right",   ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER);
 
 //    LEFT_WHEEL("left dead", ExpansionHubs.HUB2, MotorTypes.ODOMETRY, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.FLOAT, RunMode.RUN_USING_ENCODER),
 //    CENTER_WHEEL("center dead", ExpansionHubs.HUB2, MotorTypes.ODOMETRY, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.FLOAT, RunMode.RUN_USING_ENCODER),

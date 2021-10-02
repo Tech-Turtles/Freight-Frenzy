@@ -34,295 +34,294 @@ public class TelemetryTools {
      *     Gray
      */
     public void DisplayAllHTMLNameColors(Telemetry telemetry) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(TelemetryTools.setHeader(1, "Colors"))
-                .append(TelemetryTools.setFontColor("INDIANRED", "INDIANRED"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTCORAL", "LIGHTCORAL"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SALMON", "SALMON"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKSALMON", "DARKSALMON"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTSALMON", "LIGHTSALMON"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("CRIMSON", "CRIMSON"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("RED", "RED"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("FIREBRICK", "FIREBRICK"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKRED", "DARKRED"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PINK", "PINK"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTPINK", "LIGHTPINK"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("HOTPINK", "HOTPINK"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DEEPPINK", "DEEPPINK"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMVIOLETRED", "MEDIUMVIOLETRED"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PALEVIOLETRED", "PALEVIOLETRED"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTSALMON", "LIGHTSALMON"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("CORAL", "CORAL"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("TOMATO", "TOMATO"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("ORANGERED", "ORANGERED"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKORANGE", "DARKORANGE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("ORANGE", "ORANGE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("GOLD", "GOLD"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("YELLOW", "YELLOW"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTYELLOW", "LIGHTYELLOW"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LEMONCHIFFON", "LEMONCHIFFON"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTGOLDENRODYELLOW", "LIGHTGOLDENRODYELLOW"))
-                .append("\n")
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PAPAYAWHIP", "PAPAYAWHIP"))
-                .append("\n")
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MOCCASIN", "MOCCASIN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PEACHPUFF", "PEACHPUFF"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PALEGOLDENROD", "PALEGOLDENROD"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("KHAKI", "KHAKI"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKKHAKI", "DARKKHAKI"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LAVENDER", "LAVENDER"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("THISTLE", "THISTLE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PLUM", "PLUM"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("VIOLET", "VIOLET"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("ORCHID", "ORCHID"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("FUCHSIA", "FUCHSIA"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MAGENTA", "MAGENTA"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMORCHID", "MEDIUMORCHID"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMPURPLE", "MEDIUMPURPLE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("REBECCAPURPLE", "REBECCAPURPLE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("BLUEVIOLET", "BLUEVIOLET"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKVIOLET", "DARKVIOLET"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKORCHID", "DARKORCHID"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKMAGENTA", "DARKMAGENTA"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PURPLE", "PURPLE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("INDIGO", "INDIGO"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SLATEBLUE", "SLATEBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKSLATEBLUE", "DARKSLATEBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMSLATEBLUE", "MEDIUMSLATEBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("GREENYELLOW", "GREENYELLOW"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("CHARTREUSE", "CHARTREUSE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LAWNGREEN", "LAWNGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIME", "LIME"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIMEGREEN", "LIMEGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PALEGREEN", "PALEGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTGREEN", "LIGHTGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMSPRINGGREEN", "MEDIUMSPRINGGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SPRINGGREEN", "SPRINGGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMSEAGREEN", "MEDIUMSEAGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SEAGREEN", "SEAGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("FORESTGREEN", "FORESTGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("GREEN", "GREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKGREEN", "DARKGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("YELLOWGREEN", "YELLOWGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("OLIVEDRAB", "OLIVEDRAB"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("OLIVE", "OLIVE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKOLIVEGREEN", "DARKOLIVEGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMAQUAMARINE", "MEDIUMAQUAMARINE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKSEAGREEN", "DARKSEAGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTSEAGREEN", "LIGHTSEAGREEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKCYAN", "DARKCYAN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("TEAL", "TEAL"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("AQUA", "AQUA"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("CYAN", "CYAN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTCYAN", "LIGHTCYAN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PALETURQUOISE", "PALETURQUOISE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("AQUAMARINE", "AQUAMARINE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("TURQUOISE", "TURQUOISE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMTURQUOISE", "MEDIUMTURQUOISE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKTURQUOISE", "DARKTURQUOISE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("CADETBLUE", "CADETBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("STEELBLUE", "STEELBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTSTEELBLUE", "LIGHTSTEELBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("POWDERBLUE", "POWDERBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTBLUE", "LIGHTBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SKYBLUE", "SKYBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTSKYBLUE", "LIGHTSKYBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DEEPSKYBLUE", "DEEPSKYBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DODGERBLUE", "DODGERBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("CORNFLOWERBLUE", "CORNFLOWERBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMSLATEBLUE", "MEDIUMSLATEBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("ROYALBLUE", "ROYALBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("BLUE", "BLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MEDIUMBLUE", "MEDIUMBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKBLUE", "DARKBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("NAVY", "NAVY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MIDNIGHTBLUE", "MIDNIGHTBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("CORNSILK", "CORNSILK"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("BLANCHEDALMOND", "BLANCHEDALMOND"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("BISQUE", "BISQUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("NAVAJOWHITE", "NAVAJOWHITE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("WHEAT", "WHEAT"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("BURLYWOOD", "BURLYWOOD"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("TAN", "TAN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("ROSYBROWN", "ROSYBROWN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SANDYBROWN", "SANDYBROWN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("GOLDENROD", "GOLDENROD"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKGOLDENROD", "DARKGOLDENROD"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("PERU", "PERU"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("CHOCOLATE", "CHOCOLATE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SADDLEBROWN", "SADDLEBROWN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SIENNA", "SIENNA"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("BROWN", "BROWN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MAROON", "MAROON"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("WHITE", "WHITE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SNOW", "SNOW"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("HONEYDEW", "HONEYDEW"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MINTCREAM", "MINTCREAM"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("AZURE", "AZURE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("ALICEBLUE", "ALICEBLUE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("GHOSTWHITE", "GHOSTWHITE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("WHITESMOKE", "WHITESMOKE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SEASHELL", "SEASHELL"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("BEIGE", "BEIGE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("OLDLACE", "OLDLACE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("FLORALWHITE", "FLORALWHITE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("IVORY", "IVORY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("ANTIQUEWHITE", "ANTIQUEWHITE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LINEN", "LINEN"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LAVENDERBLUSH", "LAVENDERBLUSH"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("MISTYROSE", "MISTYROSE"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("GAINSBORO", "GAINSBORO"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTGRAY", "LIGHTGRAY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SILVER", "SILVER"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKGRAY", "DARKGRAY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("GRAY", "GRAY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DIMGRAY", "DIMGRAY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("LIGHTSLATEGRAY", "LIGHTSLATEGRAY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("SLATEGRAY", "SLATEGRAY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("DARKSLATEGRAY", "DARKSLATEGRAY"))
-                .append("\n")
-                .append(TelemetryTools.setFontColor("BLACK", "BLACK"));
-        telemetry.addLine(builder.toString());
+        String builder = TelemetryTools.setHeader(1, "Colors") +
+                TelemetryTools.setFontColor("INDIANRED", "INDIANRED") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTCORAL", "LIGHTCORAL") +
+                "\n" +
+                TelemetryTools.setFontColor("SALMON", "SALMON") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKSALMON", "DARKSALMON") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTSALMON", "LIGHTSALMON") +
+                "\n" +
+                TelemetryTools.setFontColor("CRIMSON", "CRIMSON") +
+                "\n" +
+                TelemetryTools.setFontColor("RED", "RED") +
+                "\n" +
+                TelemetryTools.setFontColor("FIREBRICK", "FIREBRICK") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKRED", "DARKRED") +
+                "\n" +
+                TelemetryTools.setFontColor("PINK", "PINK") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTPINK", "LIGHTPINK") +
+                "\n" +
+                TelemetryTools.setFontColor("HOTPINK", "HOTPINK") +
+                "\n" +
+                TelemetryTools.setFontColor("DEEPPINK", "DEEPPINK") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMVIOLETRED", "MEDIUMVIOLETRED") +
+                "\n" +
+                TelemetryTools.setFontColor("PALEVIOLETRED", "PALEVIOLETRED") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTSALMON", "LIGHTSALMON") +
+                "\n" +
+                TelemetryTools.setFontColor("CORAL", "CORAL") +
+                "\n" +
+                TelemetryTools.setFontColor("TOMATO", "TOMATO") +
+                "\n" +
+                TelemetryTools.setFontColor("ORANGERED", "ORANGERED") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKORANGE", "DARKORANGE") +
+                "\n" +
+                TelemetryTools.setFontColor("ORANGE", "ORANGE") +
+                "\n" +
+                TelemetryTools.setFontColor("GOLD", "GOLD") +
+                "\n" +
+                TelemetryTools.setFontColor("YELLOW", "YELLOW") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTYELLOW", "LIGHTYELLOW") +
+                "\n" +
+                TelemetryTools.setFontColor("LEMONCHIFFON", "LEMONCHIFFON") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTGOLDENRODYELLOW", "LIGHTGOLDENRODYELLOW") +
+                "\n" +
+                "\n" +
+                TelemetryTools.setFontColor("PAPAYAWHIP", "PAPAYAWHIP") +
+                "\n" +
+                "\n" +
+                TelemetryTools.setFontColor("MOCCASIN", "MOCCASIN") +
+                "\n" +
+                TelemetryTools.setFontColor("PEACHPUFF", "PEACHPUFF") +
+                "\n" +
+                TelemetryTools.setFontColor("PALEGOLDENROD", "PALEGOLDENROD") +
+                "\n" +
+                TelemetryTools.setFontColor("KHAKI", "KHAKI") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKKHAKI", "DARKKHAKI") +
+                "\n" +
+                TelemetryTools.setFontColor("LAVENDER", "LAVENDER") +
+                "\n" +
+                TelemetryTools.setFontColor("THISTLE", "THISTLE") +
+                "\n" +
+                TelemetryTools.setFontColor("PLUM", "PLUM") +
+                "\n" +
+                TelemetryTools.setFontColor("VIOLET", "VIOLET") +
+                "\n" +
+                TelemetryTools.setFontColor("ORCHID", "ORCHID") +
+                "\n" +
+                TelemetryTools.setFontColor("FUCHSIA", "FUCHSIA") +
+                "\n" +
+                TelemetryTools.setFontColor("MAGENTA", "MAGENTA") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMORCHID", "MEDIUMORCHID") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMPURPLE", "MEDIUMPURPLE") +
+                "\n" +
+                TelemetryTools.setFontColor("REBECCAPURPLE", "REBECCAPURPLE") +
+                "\n" +
+                TelemetryTools.setFontColor("BLUEVIOLET", "BLUEVIOLET") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKVIOLET", "DARKVIOLET") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKORCHID", "DARKORCHID") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKMAGENTA", "DARKMAGENTA") +
+                "\n" +
+                TelemetryTools.setFontColor("PURPLE", "PURPLE") +
+                "\n" +
+                TelemetryTools.setFontColor("INDIGO", "INDIGO") +
+                "\n" +
+                TelemetryTools.setFontColor("SLATEBLUE", "SLATEBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKSLATEBLUE", "DARKSLATEBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMSLATEBLUE", "MEDIUMSLATEBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("GREENYELLOW", "GREENYELLOW") +
+                "\n" +
+                TelemetryTools.setFontColor("CHARTREUSE", "CHARTREUSE") +
+                "\n" +
+                TelemetryTools.setFontColor("LAWNGREEN", "LAWNGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("LIME", "LIME") +
+                "\n" +
+                TelemetryTools.setFontColor("LIMEGREEN", "LIMEGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("PALEGREEN", "PALEGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTGREEN", "LIGHTGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMSPRINGGREEN", "MEDIUMSPRINGGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("SPRINGGREEN", "SPRINGGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMSEAGREEN", "MEDIUMSEAGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("SEAGREEN", "SEAGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("FORESTGREEN", "FORESTGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("GREEN", "GREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKGREEN", "DARKGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("YELLOWGREEN", "YELLOWGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("OLIVEDRAB", "OLIVEDRAB") +
+                "\n" +
+                TelemetryTools.setFontColor("OLIVE", "OLIVE") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKOLIVEGREEN", "DARKOLIVEGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMAQUAMARINE", "MEDIUMAQUAMARINE") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKSEAGREEN", "DARKSEAGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTSEAGREEN", "LIGHTSEAGREEN") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKCYAN", "DARKCYAN") +
+                "\n" +
+                TelemetryTools.setFontColor("TEAL", "TEAL") +
+                "\n" +
+                TelemetryTools.setFontColor("AQUA", "AQUA") +
+                "\n" +
+                TelemetryTools.setFontColor("CYAN", "CYAN") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTCYAN", "LIGHTCYAN") +
+                "\n" +
+                TelemetryTools.setFontColor("PALETURQUOISE", "PALETURQUOISE") +
+                "\n" +
+                TelemetryTools.setFontColor("AQUAMARINE", "AQUAMARINE") +
+                "\n" +
+                TelemetryTools.setFontColor("TURQUOISE", "TURQUOISE") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMTURQUOISE", "MEDIUMTURQUOISE") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKTURQUOISE", "DARKTURQUOISE") +
+                "\n" +
+                TelemetryTools.setFontColor("CADETBLUE", "CADETBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("STEELBLUE", "STEELBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTSTEELBLUE", "LIGHTSTEELBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("POWDERBLUE", "POWDERBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTBLUE", "LIGHTBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("SKYBLUE", "SKYBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTSKYBLUE", "LIGHTSKYBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("DEEPSKYBLUE", "DEEPSKYBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("DODGERBLUE", "DODGERBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("CORNFLOWERBLUE", "CORNFLOWERBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMSLATEBLUE", "MEDIUMSLATEBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("ROYALBLUE", "ROYALBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("BLUE", "BLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("MEDIUMBLUE", "MEDIUMBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKBLUE", "DARKBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("NAVY", "NAVY") +
+                "\n" +
+                TelemetryTools.setFontColor("MIDNIGHTBLUE", "MIDNIGHTBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("CORNSILK", "CORNSILK") +
+                "\n" +
+                TelemetryTools.setFontColor("BLANCHEDALMOND", "BLANCHEDALMOND") +
+                "\n" +
+                TelemetryTools.setFontColor("BISQUE", "BISQUE") +
+                "\n" +
+                TelemetryTools.setFontColor("NAVAJOWHITE", "NAVAJOWHITE") +
+                "\n" +
+                TelemetryTools.setFontColor("WHEAT", "WHEAT") +
+                "\n" +
+                TelemetryTools.setFontColor("BURLYWOOD", "BURLYWOOD") +
+                "\n" +
+                TelemetryTools.setFontColor("TAN", "TAN") +
+                "\n" +
+                TelemetryTools.setFontColor("ROSYBROWN", "ROSYBROWN") +
+                "\n" +
+                TelemetryTools.setFontColor("SANDYBROWN", "SANDYBROWN") +
+                "\n" +
+                TelemetryTools.setFontColor("GOLDENROD", "GOLDENROD") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKGOLDENROD", "DARKGOLDENROD") +
+                "\n" +
+                TelemetryTools.setFontColor("PERU", "PERU") +
+                "\n" +
+                TelemetryTools.setFontColor("CHOCOLATE", "CHOCOLATE") +
+                "\n" +
+                TelemetryTools.setFontColor("SADDLEBROWN", "SADDLEBROWN") +
+                "\n" +
+                TelemetryTools.setFontColor("SIENNA", "SIENNA") +
+                "\n" +
+                TelemetryTools.setFontColor("BROWN", "BROWN") +
+                "\n" +
+                TelemetryTools.setFontColor("MAROON", "MAROON") +
+                "\n" +
+                TelemetryTools.setFontColor("WHITE", "WHITE") +
+                "\n" +
+                TelemetryTools.setFontColor("SNOW", "SNOW") +
+                "\n" +
+                TelemetryTools.setFontColor("HONEYDEW", "HONEYDEW") +
+                "\n" +
+                TelemetryTools.setFontColor("MINTCREAM", "MINTCREAM") +
+                "\n" +
+                TelemetryTools.setFontColor("AZURE", "AZURE") +
+                "\n" +
+                TelemetryTools.setFontColor("ALICEBLUE", "ALICEBLUE") +
+                "\n" +
+                TelemetryTools.setFontColor("GHOSTWHITE", "GHOSTWHITE") +
+                "\n" +
+                TelemetryTools.setFontColor("WHITESMOKE", "WHITESMOKE") +
+                "\n" +
+                TelemetryTools.setFontColor("SEASHELL", "SEASHELL") +
+                "\n" +
+                TelemetryTools.setFontColor("BEIGE", "BEIGE") +
+                "\n" +
+                TelemetryTools.setFontColor("OLDLACE", "OLDLACE") +
+                "\n" +
+                TelemetryTools.setFontColor("FLORALWHITE", "FLORALWHITE") +
+                "\n" +
+                TelemetryTools.setFontColor("IVORY", "IVORY") +
+                "\n" +
+                TelemetryTools.setFontColor("ANTIQUEWHITE", "ANTIQUEWHITE") +
+                "\n" +
+                TelemetryTools.setFontColor("LINEN", "LINEN") +
+                "\n" +
+                TelemetryTools.setFontColor("LAVENDERBLUSH", "LAVENDERBLUSH") +
+                "\n" +
+                TelemetryTools.setFontColor("MISTYROSE", "MISTYROSE") +
+                "\n" +
+                TelemetryTools.setFontColor("GAINSBORO", "GAINSBORO") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTGRAY", "LIGHTGRAY") +
+                "\n" +
+                TelemetryTools.setFontColor("SILVER", "SILVER") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKGRAY", "DARKGRAY") +
+                "\n" +
+                TelemetryTools.setFontColor("GRAY", "GRAY") +
+                "\n" +
+                TelemetryTools.setFontColor("DIMGRAY", "DIMGRAY") +
+                "\n" +
+                TelemetryTools.setFontColor("LIGHTSLATEGRAY", "LIGHTSLATEGRAY") +
+                "\n" +
+                TelemetryTools.setFontColor("SLATEGRAY", "SLATEGRAY") +
+                "\n" +
+                TelemetryTools.setFontColor("DARKSLATEGRAY", "DARKSLATEGRAY") +
+                "\n" +
+                TelemetryTools.setFontColor("BLACK", "BLACK");
+        telemetry.addLine(builder);
     }
 }

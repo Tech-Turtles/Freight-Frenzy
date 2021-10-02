@@ -48,9 +48,6 @@ public class TelemetryLog implements Serializable {
         this.encoder_frontLeft = robotHardware.motorUtility.getEncoderValue(Motors.FRONT_LEFT);
         this.encoder_backRight = robotHardware.motorUtility.getEncoderValue(Motors.BACK_RIGHT);
         this.encoder_backLeft = robotHardware.motorUtility.getEncoderValue(Motors.BACK_LEFT);
-        this.encoder_launcher = robotHardware.motorUtility.getEncoderValue(Motors.LAUNCHER);
-        this.range_wobble = robotHardware.getDistance(robotHardware.getColorSensor(ColorSensor.WOBBLE_SENSOR));
-        this.current_intake = robotHardware.motorUtility.getCurrent(Motors.INTAKE);
     }
 
     public TelemetryLog(double time, Pose2d pose, EnumMap<Motors, Integer> motorEncoders) {

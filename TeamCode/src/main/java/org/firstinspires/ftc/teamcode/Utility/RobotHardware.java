@@ -34,9 +34,6 @@ import org.firstinspires.ftc.teamcode.Utility.Odometry.IMUUtilities;
 import org.firstinspires.ftc.teamcode.Utility.Odometry.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Utility.Vision.UGCoffeeDetector;
 
-import static org.firstinspires.ftc.teamcode.Utility.Configuration.HOPPER_OPEN_POS;
-import static org.firstinspires.ftc.teamcode.Utility.Configuration.HOPPER_PUSH_POS;
-
 /**
  * @author Christian
  * Revamped RobotHardware, better readability, new methods, more organized, easier to build upon.
@@ -296,13 +293,6 @@ public class RobotHardware extends OpMode {
             s = getServo(servo);
             if (s != null)
                 s.setPosition(pos);
-            // Log time shot was fired or reset (log only on change)
-            if (servo == Servos.HOPPER & pos != s.getPosition()) {
-                if (pos == HOPPER_PUSH_POS)
-                    launcherFireTimestamp = getTime();
-                if (pos == HOPPER_OPEN_POS)
-                    launcherResetTimestamp = getTime();
-            }
         }
 
         public double getAngle(Servos servo) {
@@ -464,9 +454,7 @@ public class RobotHardware extends OpMode {
         }
         clearHubCache();
         period.updatePeriodTime();
-        // Maintain record of launcher velocities of same length as period records
-        ListMath.addRemoveN(launchVelocityHistory,
-                motorUtility.getVelocity(Motors.LAUNCHER), period.getHistoryLength());
+
         primary.update();
         secondary.update();
     }
@@ -482,7 +470,6 @@ public class RobotHardware extends OpMode {
         dashboard = null;
         try {
             lastPosition = mecanumDrive.getPoseEstimate();
-            lastWobblePosition = motorUtility.getEncoderValue(Motors.WOBBLE_ARM);
         } catch (Exception e) {
             Log.wtf("Unable to save positions", e.getMessage());
         }

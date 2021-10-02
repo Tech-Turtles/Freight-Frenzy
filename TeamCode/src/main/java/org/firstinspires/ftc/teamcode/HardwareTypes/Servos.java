@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public enum Servos {
 
-    HOPPER("hopper", Servo.Direction.FORWARD, ServoTypes.INDEPENDENT),
-    SPATULA("spatula", Servo.Direction.FORWARD, ServoTypes.INDEPENDENT);
+    ;
 
     private final String configName;
     private final Servo.Direction direction;

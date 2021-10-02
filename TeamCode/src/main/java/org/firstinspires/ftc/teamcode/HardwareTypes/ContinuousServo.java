@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public enum ContinuousServo {
 
-    WOBBLE_LEFT("wobble_left", DcMotorSimple.Direction.FORWARD, ServoTypes.LINKED),
-    WOBBLE_RIGHT("wobble_right", DcMotorSimple.Direction.REVERSE, ServoTypes.LINKED);
+    ;
 
     private final String configName;
     private final DcMotorSimple.Direction direction;
