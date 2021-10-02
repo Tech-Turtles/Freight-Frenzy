@@ -10,9 +10,21 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+apply plugin: 'kotlin-android'
 dependencies {
     /*
      * Other Modules
      */
     implementation project(':FtcRobotController')
+
+    // Add On Libraries
+    api 'org.openftc:easyopencv:1.4.1'
+    implementation 'com.acmerobotics.roadrunner:core:0.5.3'
+    implementation group: 'org.json', name: 'json', version: '20180813'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-math3
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    implementation group:'org.yaml', name: 'snakeyaml', version: '1.21' // name or artifactId ?
+    implementation group:'com.opencsv', name: 'opencsv', version: '5.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
