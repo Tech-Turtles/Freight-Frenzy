@@ -8,9 +8,9 @@
             <goBILDA5202SeriesMotor name="front left"   port="3" />
             <LynxEmbeddedIMU        name="IMU_1"        port="0" bus="0" />
         </LynxModule>
-<!--        Expansion hub segment  -->
-<!--        <LynxModule name="Expansion Hub 2" port="2">-->
-<!--            <LynxEmbeddedIMU name="imu" port="0" bus="0" />-->
-<!--        </LynxModule>-->
+        <LynxModule name="Expansion Hub 2" port="2">
+            <goBILDA5202SeriesMotor name="middle"   port="0" />
+            <LynxEmbeddedIMU        name="imu"      port="0" bus="0" />
+        </LynxModule>
     </LynxUsbDevice>
 </Robot>

@@ -9,12 +9,9 @@ public enum Motors {
     FRONT_LEFT( "front left",   ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
     FRONT_RIGHT("front right",  ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
     BACK_LEFT(  "back left",    ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
-    BACK_RIGHT( "back right",   ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER);
-
-//    LEFT_WHEEL("left dead", ExpansionHubs.HUB2, MotorTypes.ODOMETRY, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.FLOAT, RunMode.RUN_USING_ENCODER),
-//    CENTER_WHEEL("center dead", ExpansionHubs.HUB2, MotorTypes.ODOMETRY, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.FLOAT, RunMode.RUN_USING_ENCODER),
-//    RIGHT_WHEEL("right dead", ExpansionHubs.HUB2, MotorTypes.ODOMETRY, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.FLOAT, RunMode.RUN_USING_ENCODER);
-
+    BACK_RIGHT( "back right",   ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
+    MIDDLE(     "middle",       ExpansionHubs.HUB2, MotorTypes.DRIVE, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER);
+    
     private final String configName;
     private final ExpansionHubs expansionHub;
     private final DcMotor.Direction direction;

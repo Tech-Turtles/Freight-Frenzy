@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.HardwareTypes.IMU;
@@ -97,7 +98,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private LinkedList<Pose2d> poseHistory;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    private DcMotorEx leftFront, leftRear, rightRear, rightFront, middle;
     private List<DcMotorEx> motors;
     private BNO055IMU imu;
 
@@ -146,6 +147,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         leftRear = hardwareMap.get(DcMotorEx.class, Motors.BACK_LEFT.getConfigName());
         rightRear = hardwareMap.get(DcMotorEx.class, Motors.BACK_RIGHT.getConfigName());
         rightFront = hardwareMap.get(DcMotorEx.class, Motors.FRONT_RIGHT.getConfigName());
+        middle = hardwareMap.get(DcMotorEx.class, Motors.MIDDLE.getConfigName());
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -406,6 +408,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         leftRear.setPower(v1);
         rightRear.setPower(v2);
         rightFront.setPower(v3);
+        middle.setPower(Range.clip(v + v3, -1, 1));
     }
 
     @Override

@@ -35,42 +35,36 @@ import org.firstinspires.ftc.teamcode.Utility.Odometry.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Utility.Vision.UGCoffeeDetector;
 
 /**
- * @author Christian
+ * @author Christian, Ashley
  * Revamped RobotHardware, better readability, new methods, more organized, easier to build upon.
  */
 public class RobotHardware extends OpMode {
-
+    // Hashmaps to store the hardware object with the key being the enum values.
     private final HashMap<Motors, DcMotorEx> motors = new HashMap<>();
     private final HashMap<Servos, Servo> servos = new HashMap<>();
     private final HashMap<ContinuousServo, CRServo> crServos = new HashMap<>();
     private final HashMap<ColorSensor, RevColorSensorV3> colorSensors = new HashMap<>();
-
+    // Utility objects to access hardware methods.
     public final MotorUtility motorUtility = new MotorUtility();
     public final ServoUtility servoUtility = new ServoUtility();
-
-    public static DecimalFormat df = new DecimalFormat("0.00");
-    public static DecimalFormat df_precise = new DecimalFormat("0.0000");
-
+    // Decimal format objects for easy string formatting.
+    public static DecimalFormat df = new DecimalFormat("0.00"), df_precise = new DecimalFormat("0.0000");
+    // Hub & hub sensor objects.
     public IMUUtilities imuUtil;
     public VoltageSensor batteryVoltageSensor;
-
     protected LynxModule expansionHub1, expansionHub2;
-
+    // Timer to keep track of the period & period mean times.
     public final ElapsedTimer period = new ElapsedTimer();
-    public ArrayList<Double> launchVelocityHistory = new ArrayList<>();
-    public double launcherFireTimestamp = 0.0;
-    public double launcherResetTimestamp = 0.0;
-
+    // Controller objects that act as a more intuitive wrapper for the FTC gamepad class.
     public Controller primary, secondary;
 
     public UGCoffeeDetector ringDetector;
     public SampleMecanumDrive mecanumDrive;
-
+    // Acme dashboard objects.
     private FtcDashboard dashboard;
     public TelemetryPacket packet;
 
     public static Pose2d lastPosition = new Pose2d(0,0,0);
-    public static int lastWobblePosition = 0;
 
     public class MotorUtility {
 
@@ -327,6 +321,21 @@ public class RobotHardware extends OpMode {
             cr = getContinuousServo(continuousServo);
             if(cr == null) return;
             cr.setPower(power);
+        }
+
+        /**
+         * Scales the available movement range of the servo to be a subset of its maximum range. Subsequent
+         * positioning calls will operate within that subset range. This is useful if your servo has
+         * only a limited useful range of movement due to the physical hardware that it is manipulating
+         * (as is often the case) but you don't want to have to manually scale and adjust the input
+         * @param servo The servo being scaled.
+         * @param min Minimum of the range.
+         * @param max Max of the range.
+         */
+        public void setScale(Servos servo, double min, double max) {
+            s = getServo(servo);
+            if(s == null) return;
+            s.scaleRange(min, max);
         }
     }
 
