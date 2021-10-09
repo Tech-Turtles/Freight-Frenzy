@@ -11,6 +11,9 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply plugin: 'kotlin-android'
+repositories {
+    maven { url = "https://maven.0x778.tk" }
+}
 dependencies {
     /*
      * Other Modules
@@ -27,4 +30,5 @@ dependencies {
     implementation group:'com.opencsv', name: 'opencsv', version: '5.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.spartronics4915.lib:ftc265:2.1.9'
 }
