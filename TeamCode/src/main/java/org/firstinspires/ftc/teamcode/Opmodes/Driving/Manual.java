@@ -6,25 +6,28 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.HardwareTypes.ContinuousServo;
+import org.firstinspires.ftc.teamcode.HardwareTypes.Motors;
 import org.firstinspires.ftc.teamcode.Utility.*;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.TrajectoryRR;
-import org.firstinspires.ftc.teamcode.Utility.Mecanum.MecanumNavigation;
 import org.firstinspires.ftc.teamcode.Utility.Odometry.DriveConstants;
 import org.firstinspires.ftc.teamcode.Utility.Odometry.SampleMecanumDrive;
 
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.*;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.deadzone;
 
 @Config
 @TeleOp(name="Manual", group="A")
 public class Manual extends RobotHardware {
 
-    public static double drivespeed = 1.0;
+    public static double driveSpeed = 1.0;
     public static double precisionMode = 1.0;
     public static double precisionPercentage = 0.35;
     public static double linearSpeed = 1.0;
     public static double lateralSpeed = 1.0;
     public static double rotationSpeed = 1.0;
+    public static double intakeSpeed = 1.0;
 
     private final Executive.StateMachine<Manual> stateMachine;
     private TrajectoryRR trajectoryRR;
@@ -43,14 +46,6 @@ public class Manual extends RobotHardware {
     private final PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
     private Vector2d targetPosition = new Vector2d(12*6,-12);
 
-
-    private enum WobbleStates {
-        MANUAL,
-        UP,
-        DOWN,
-        STORE
-    }
-
     public Manual() {
         stateMachine = new Executive.StateMachine<>(this);
         stateMachine.update();
@@ -62,7 +57,7 @@ public class Manual extends RobotHardware {
         stateMachine.changeState(DRIVE, new Drive_Manual());
         stateMachine.init();
         headingController.setInputBounds(-Math.PI, Math.PI);
-        mecanumDrive = new SampleMecanumDrive(hardwareMap);
+        mecanumDrive = new SampleMecanumDrive(hardwareMap, this);
 //        trajectoryRR = new TrajectoryRR(this.mecanumDrive);
     }
 
@@ -101,13 +96,61 @@ public class Manual extends RobotHardware {
      */
 
     void drivetrainStandardControls() {
-        mecanumDrive.setWeightedDrivePower(
-                new Pose2d(
+        Pose2d poseEstimate = mecanumDrive.getPoseEstimate();
+        Pose2d driveDirection = new Pose2d();
+
+        Vector2d fieldFrameInput = new Vector2d(
+                -gamepad1.left_stick_y * linearSpeed * precisionMode,
+                -gamepad1.left_stick_x * lateralSpeed * precisionMode);
+
+        Vector2d robotFrameInput = fieldFrameInput
+                .rotated(-poseEstimate.getHeading() + Math.toRadians(90.0));
+
+        if(primary.AOnce()){
+            precisionMode = precisionMode == 1 ? precisionPercentage : 1;
+        }
+
+        if(primary.XOnce()) {
+            currentDriveMode = currentDriveMode == DriveMode.NORMAL_ROBOT_CENTRIC ? DriveMode.NORMAL_FIELD_CENTRIC : DriveMode.NORMAL_ROBOT_CENTRIC;
+        }
+
+        switch (currentDriveMode) {
+            case NORMAL_ROBOT_CENTRIC:
+                driveDirection = new Pose2d(
                         -gamepad1.left_stick_y * linearSpeed * precisionMode,
                         -gamepad1.left_stick_x * lateralSpeed * precisionMode,
                         -gamepad1.right_stick_x * rotationSpeed * precisionMode
-                )
-        );
+                );
+                break;
+            case NORMAL_FIELD_CENTRIC:
+                driveDirection = new Pose2d(
+                        robotFrameInput.getX(), robotFrameInput.getY(),
+                        -gamepad1.right_stick_x * rotationSpeed * precisionMode
+                );
+                break;
+        }
+
+        if(currentDriveMode != DriveMode.NORMAL_FIELD_CENTRIC && Math.abs(primary.right_stick_x) > 0.1) {
+            currentDriveMode = DriveMode.NORMAL_ROBOT_CENTRIC;
+        }
+
+        mecanumDrive.setWeightedDrivePower(driveDirection);
+
+        if(primary.right_trigger > deadzone) {
+            motorUtility.setPower(Motors.INTAKE, intakeSpeed);
+        } else if(primary.left_trigger > deadzone) {
+            motorUtility.setPower(Motors.INTAKE, -intakeSpeed);
+        } else {
+            motorUtility.setPower(Motors.INTAKE, 0.0);
+        }
+
+        if(primary.rightBumper()) {
+            motorUtility.setPower(Motors.CAROUSEL, 1.0);
+        } else if(primary.leftBumper()) {
+            motorUtility.setPower(Motors.CAROUSEL, -1.0);
+        } else {
+            motorUtility.setPower(Motors.CAROUSEL, 0.0);
+        }
     }
 
     void drivetrainAdvancedControls() {
@@ -118,7 +161,7 @@ public class Manual extends RobotHardware {
                 -gamepad1.left_stick_y * linearSpeed * precisionMode,
                 -gamepad1.left_stick_x * lateralSpeed * precisionMode);
 
-       Vector2d robotFrameInput = fieldFrameInput
+        Vector2d robotFrameInput = fieldFrameInput
                .rotated(-poseEstimate.getHeading() + Math.toRadians(90.0));
 
 
@@ -126,7 +169,7 @@ public class Manual extends RobotHardware {
         double theta;
         double thetaFF;
         double headingInput;
-       switch (currentDriveMode) {
+        switch (currentDriveMode) {
            case NORMAL_ROBOT_CENTRIC:
               driveDirection = new Pose2d(
                        -gamepad1.left_stick_y * linearSpeed * precisionMode,
@@ -214,7 +257,7 @@ public class Manual extends RobotHardware {
         telemetry.addData("Heading:             ", df.format(Math.toDegrees(poseEstimate.getHeading())));
         if(packet != null) {
             packet.put("Precision mode:      ", df.format(precisionMode));
-            packet.put("Drive speed:         ", df.format(drivespeed));
+            packet.put("Drive speed:         ", df.format(driveSpeed));
             packet.put("Precision speed:     ", df.format(precisionPercentage));
             packet.put("Loop time:           ", df_precise.format(period.getAveragePeriodSec()) + "s");
         }

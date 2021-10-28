@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.Utility.Odometry.SampleMecanumDrive;
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, null);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

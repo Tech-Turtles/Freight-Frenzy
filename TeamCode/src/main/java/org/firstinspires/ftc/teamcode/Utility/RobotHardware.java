@@ -20,19 +20,22 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Utility.Math.ListMath;
+import org.firstinspires.ftc.teamcode.HardwareTypes.ColorSensor;
+import org.firstinspires.ftc.teamcode.HardwareTypes.ContinuousServo;
+import org.firstinspires.ftc.teamcode.HardwareTypes.ExpansionHubs;
+import org.firstinspires.ftc.teamcode.HardwareTypes.MotorTypes;
+import org.firstinspires.ftc.teamcode.HardwareTypes.Motors;
+import org.firstinspires.ftc.teamcode.HardwareTypes.Servos;
+import org.firstinspires.ftc.teamcode.HardwareTypes.Webcam;
+import org.firstinspires.ftc.teamcode.Utility.Math.ElapsedTimer;
 import org.firstinspires.ftc.teamcode.Utility.Mecanum.AutoDrive;
 import org.firstinspires.ftc.teamcode.Utility.Mecanum.Mecanum;
-import org.firstinspires.ftc.teamcode.Utility.Math.ElapsedTimer;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.firstinspires.ftc.teamcode.HardwareTypes.*;
 import org.firstinspires.ftc.teamcode.Utility.Odometry.IMUUtilities;
 import org.firstinspires.ftc.teamcode.Utility.Odometry.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Utility.Vision.UGCoffeeDetector;
+
+import java.text.DecimalFormat;
+import java.util.HashMap;
 
 /**
  * @author Christian, Ashley
@@ -48,7 +51,7 @@ public class RobotHardware extends OpMode {
     public final MotorUtility motorUtility = new MotorUtility();
     public final ServoUtility servoUtility = new ServoUtility();
     // Decimal format objects for easy string formatting.
-    public static DecimalFormat df = new DecimalFormat("0.00"), df_precise = new DecimalFormat("0.0000");
+    public static final DecimalFormat df = new DecimalFormat("0.00"), df_precise = new DecimalFormat("0.0000");
     // Hub & hub sensor objects.
     public IMUUtilities imuUtil;
     public VoltageSensor batteryVoltageSensor;
@@ -74,6 +77,13 @@ public class RobotHardware extends OpMode {
             m = motors.get(motor);
             if (m == null && packet != null)
                 packet.put("Motor Missing", motor.name());
+        }
+
+        public DcMotorEx getMotorReference(Motors motor) {
+            DcMotorEx m = motors.get(motor);
+            if (m == null && packet != null)
+                packet.put("Motor Missing", motor.name());
+            return m;
         }
 
         public double getPower(Motors motor) {
@@ -137,7 +147,7 @@ public class RobotHardware extends OpMode {
             setPIDFCoefficients(runMode, compensatedCoefficients, motor);
         }
 
-        public void setTypeMotorsRunmode(MotorTypes type, DcMotor.RunMode runMode) {
+        public void setTypeMotorsRunMode(MotorTypes type, DcMotor.RunMode runMode) {
             for (Motors motor : Motors.values()) {
                 if (!motor.getType().equals(type)) continue;
                 getMotor(motor);
@@ -368,6 +378,10 @@ public class RobotHardware extends OpMode {
 
     public double getTime() {
         return time;
+    }
+
+    public FtcDashboard getDashboard() {
+        return dashboard;
     }
 
     @Override

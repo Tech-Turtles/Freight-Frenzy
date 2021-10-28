@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Opmodes.Autonomous.AutoOpmode;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.AllianceColor;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.StartPosition;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.TrajectoryRR;
-import org.firstinspires.ftc.teamcode.Utility.Vision.RingDetectionAmount;
+import org.firstinspires.ftc.teamcode.Utility.Vision.DetectionAmount;
 
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.DRIVE;
 import static org.firstinspires.ftc.teamcode.Utility.RobotHardware.df;
@@ -23,7 +23,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
     private final StartPosition startPosition;
     private TrajectoryRR trajectoryRR;
 
-    private RingDetectionAmount rings = RingDetectionAmount.ZERO;
+    private DetectionAmount canSee = DetectionAmount.NONE;
 
     public RobotStateContext(AutoOpmode opmode, AllianceColor allianceColor, StartPosition startPosition) {
         this.opmode = opmode;
@@ -42,12 +42,12 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
     public void update() {
         stateMachine.update();
         Pose2d poseEstimate = opmode.mecanumDrive.getPoseEstimate();
-        opmode.telemetry.addData("Rings:    ", rings.name());
+        opmode.telemetry.addData("Vision:   ", canSee.name());
         opmode.telemetry.addData("X:        ", df.format(poseEstimate.getX()));
         opmode.telemetry.addData("Y:        ", df.format(poseEstimate.getY()));
         opmode.telemetry.addData("Heading:  ", df.format(Math.toDegrees(poseEstimate.getHeading())));
         if(opmode.packet != null) {
-            opmode.packet.put("Rings:       ", rings.name());
+            opmode.packet.put("Vision:      ", canSee.name());
         }
     }
 
@@ -72,7 +72,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                     nextState(DRIVE, new Initial());
                     break;
                 case DEPOT:
-                    nextState(DRIVE, new Initial());
+                    nextState(DRIVE, new Park());
                     break;
                 default:
                    throw new IllegalArgumentException("Invalid start position");
@@ -117,9 +117,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
             super.update();
 
             if(opMode.ringDetector != null)
-                rings = opMode.ringDetector.getHeight();
-
-            trajectoryRR.setZone(rings);
+                canSee = opMode.ringDetector.getHeight();
 
             switch (startPosition) {
                 case CAROUSEL:
@@ -128,6 +126,29 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                 case DEPOT:
 
             }
+        }
+    }
+
+    /**
+     * Park State
+     *
+     *
+     * Trajectory: none
+     * Next State: Stop
+     */
+    class Park extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryStartToPark());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+
+            if(opMode.mecanumDrive.isIdle())
+                nextState(DRIVE, new Stop());
         }
     }
 

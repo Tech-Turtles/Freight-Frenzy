@@ -2,16 +2,14 @@ package org.firstinspires.ftc.teamcode.Opmodes.Autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.HardwareTypes.Motors;
 import org.firstinspires.ftc.teamcode.Utility.*;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.AllianceColor;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.StartPosition;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.RobotStateContext;
 import org.firstinspires.ftc.teamcode.Utility.Odometry.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.Utility.Vision.RingDetectionAmount;
+import org.firstinspires.ftc.teamcode.Utility.Vision.DetectionAmount;
 
 
 public class AutoOpmode extends RobotHardware {
@@ -19,7 +17,7 @@ public class AutoOpmode extends RobotHardware {
     AllianceColor robotColor;
     StartPosition robotStartPos;
     private Executive.RobotStateMachineContextInterface robotStateContext;
-    public RingDetectionAmount initializationRingDetectionAmount = null;
+    public DetectionAmount initializationDetectionAmount = null;
 
     @Autonomous(name="Red Carousel", group="A")
     public static class AutoRedPickup extends AutoOpmode {
@@ -62,7 +60,7 @@ public class AutoOpmode extends RobotHardware {
         super.init();
         robotStateContext = new RobotStateContext(this, robotColor, robotStartPos);
 //        new Thread(this::loadVision).start();
-        mecanumDrive = new SampleMecanumDrive(hardwareMap);
+        mecanumDrive = new SampleMecanumDrive(hardwareMap, this);
         mecanumDrive.setPoseEstimate(new Pose2d(0, 0, 0));
 
         robotStateContext.init();
@@ -75,10 +73,10 @@ public class AutoOpmode extends RobotHardware {
         primary.update();
 
         if(ringDetector != null) {
-            initializationRingDetectionAmount = ringDetector.getHeight();
-            telemetry.addData("Initialization Ring Amount", initializationRingDetectionAmount.name());
+            initializationDetectionAmount = ringDetector.getHeight();
+            telemetry.addData("Initialization Ring Amount", initializationDetectionAmount.name());
             if(packet != null)
-                packet.put("Initialization Ring Amount", initializationRingDetectionAmount.name());
+                packet.put("Initialization Ring Amount", initializationDetectionAmount.name());
         }
     }
 

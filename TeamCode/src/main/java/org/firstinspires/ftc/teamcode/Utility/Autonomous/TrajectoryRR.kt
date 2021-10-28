@@ -5,16 +5,22 @@ import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.*
+import org.firstinspires.ftc.teamcode.Utility.Configuration.ROBOT_LENGTH
 import org.firstinspires.ftc.teamcode.Utility.Odometry.DriveConstants
 import org.firstinspires.ftc.teamcode.Utility.Odometry.SampleMecanumDrive
-import org.firstinspires.ftc.teamcode.Utility.Vision.RingDetectionAmount
-import org.firstinspires.ftc.teamcode.Utility.Vision.RingDetectionAmount.*
+import org.firstinspires.ftc.teamcode.Utility.Configuration.ROBOT_WIDTH
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
     val drive: SampleMecanumDrive = sampleMecanumDrive
+
+    val START_DEPOT = Pose2d(0.0, -70.0 - (ROBOT_WIDTH / 2), Math.toRadians(0.0))
+    val VERTICAL_BARRIER_ALIGN = Pose2d(0.0, 17.85, Math.toRadians(0.0))
+    val WAREHOUSE_PARK = Pose2d(33.0 + ROBOT_LENGTH, 17.85, Math.toRadians(0.0))
+
+    var trajectoryStartToPark: Trajectory? = null
 
     private var velocityConstraint: TrajectoryVelocityConstraint? = null
     private var accelerationConstraint: TrajectoryAccelerationConstraint? = null
@@ -30,12 +36,6 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
 
     val list = ArrayList<Trajectory>()
 
-    fun setZone(ringAmount: RingDetectionAmount) {
-
-        buildtrajectories()
-    }
-
-
     init {
         velocityConstraint = getMinVelocityConstraint(DriveConstants.MAX_VEL)
         accelerationConstraint = getMinAccelerationConstraint(DriveConstants.MAX_ACCEL)
@@ -46,11 +46,10 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
         ringVelocityConstraint = getMinVelocityConstraint(ringVelocity)
         ringAccelerationConstraint = getMinAccelerationConstraint(ringAcceleration)
 
-        buildtrajectories()
-        setZone(ZERO)
+        buildTrajectories()
     }
 
-    private fun buildtrajectories() {
+    private fun buildTrajectories() {
 
         // Example
 //        val tempTraj: Trajectory =
@@ -58,6 +57,13 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
 //                        .splineToConstantHeading(CENTER.vec(), (20.0 + 90.0).toRadians)
 //                        .build()
 //        this.mainTraj = tempTraj
+
+        val startToPark: Trajectory =
+                trajectoryBuilder(START_DEPOT, 0.0)
+                        .lineToConstantHeading(VERTICAL_BARRIER_ALIGN.vec())
+                        .lineToConstantHeading(WAREHOUSE_PARK.vec())
+                        .build()
+        this.trajectoryStartToPark = startToPark
     }
 
     fun toVector2d(pose: Pose2d): Vector2d {
