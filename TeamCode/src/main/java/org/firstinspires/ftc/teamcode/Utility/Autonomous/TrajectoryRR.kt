@@ -16,11 +16,16 @@ import kotlin.math.sqrt
 class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
     val drive: SampleMecanumDrive = sampleMecanumDrive
 
-    val START_DEPOT = Pose2d(0.0, -70.0 - (ROBOT_WIDTH / 2), Math.toRadians(0.0))
-    val VERTICAL_BARRIER_ALIGN = Pose2d(0.0, 17.85, Math.toRadians(0.0))
-    val WAREHOUSE_PARK = Pose2d(33.0 + ROBOT_LENGTH, 17.85, Math.toRadians(0.0))
+    val START_DEPOT = Pose2d(0.0, -70.0 + (ROBOT_WIDTH / 2), 0.0)
+    val START_CAROUSEL = Pose2d(-46.5, -61.25, 0.0)
+    private val CAROUSEL_ALIGN = Pose2d(-53.5, -55.75, 0.0)
+    private val SHIPPING_HUB_PARK = Pose2d(-61.75, -33.0, 0.0)
+    private val VERTICAL_BARRIER_ALIGN = Pose2d(0.0, -40 - (ROBOT_WIDTH / 2), 0.0)
+    private val WAREHOUSE_PARK = Pose2d(30.0 + ROBOT_LENGTH, -37 - (ROBOT_WIDTH / 2), 0.0)
 
     var trajectoryStartToPark: Trajectory? = null
+    var trajectoryStartToCarousel: Trajectory? = null
+    var trajectoryCarouselToHub: Trajectory? = null
 
     private var velocityConstraint: TrajectoryVelocityConstraint? = null
     private var accelerationConstraint: TrajectoryAccelerationConstraint? = null
@@ -59,18 +64,29 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
 //        this.mainTraj = tempTraj
 
         val startToPark: Trajectory =
-                trajectoryBuilder(START_DEPOT, 0.0)
+                trajectoryBuilder(START_DEPOT, (-90.0).toRadians)
                         .lineToConstantHeading(VERTICAL_BARRIER_ALIGN.vec())
-                        .lineToConstantHeading(WAREHOUSE_PARK.vec())
+                        .splineToConstantHeading(WAREHOUSE_PARK.vec(), 0.0)
                         .build()
         this.trajectoryStartToPark = startToPark
+
+        val startToCarousel: Trajectory =
+                trajectoryBuilder(START_CAROUSEL, (180.0).toRadians)
+                        .lineToConstantHeading(CAROUSEL_ALIGN.vec())
+                        .build()
+        this.trajectoryStartToCarousel = startToCarousel
+        val carouselToHub: Trajectory =
+                trajectoryBuilder(CAROUSEL_ALIGN, (-90.0).toRadians)
+                        .lineToConstantHeading(SHIPPING_HUB_PARK.vec())
+                        .build()
+        this.trajectoryCarouselToHub = carouselToHub
     }
 
     fun toVector2d(pose: Pose2d): Vector2d {
         return Vector2d(pose.x, pose.y)
     }
 
-    fun  trajectoryBuilder(pose: Pose2d, heading: Double): TrajectoryBuilder{
+    private fun  trajectoryBuilder(pose: Pose2d, heading: Double): TrajectoryBuilder{
         return drive.trajectoryBuilder(pose, heading)
     }
 

@@ -11,6 +11,9 @@ import org.firstinspires.ftc.teamcode.Utility.Autonomous.TrajectoryRR;
 import org.firstinspires.ftc.teamcode.Utility.Vision.DetectionAmount;
 
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.DRIVE;
+import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.LAUNCHER;
+import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.WOBBLE;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_DRIVE_POS;
 import static org.firstinspires.ftc.teamcode.Utility.RobotHardware.df;
 
 @Config
@@ -69,10 +72,12 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
             super.init(stateMachine);
             switch (startPosition) {
                 case CAROUSEL:
+                    setupInitialPosition(trajectoryRR.getSTART_CAROUSEL());
                     nextState(DRIVE, new Initial());
                     break;
                 case DEPOT:
-                    nextState(DRIVE, new Park());
+                    setupInitialPosition(trajectoryRR.getSTART_DEPOT());
+                    nextState(DRIVE, new Initial());
                     break;
                 default:
                    throw new IllegalArgumentException("Invalid start position");
@@ -95,12 +100,22 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         @Override
         public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
             super.init(stateMachine);
+            nextState(LAUNCHER, new ArmDrive());
         }
 
         @Override
         public void update() {
             super.update();
-            nextState(DRIVE, new Scan());
+
+            switch (startPosition) {
+                case CAROUSEL:
+                    if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
+                        nextState(DRIVE, new StartToCarousel());
+                    break;
+                case DEPOT:
+                    if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
+                        nextState(DRIVE, new Park());
+            }
         }
     }
 
@@ -129,6 +144,77 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         }
     }
 
+    class ArmDrive extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            isDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 1.0);
+        }
+    }
+
+    /**
+     * State
+     *
+     *
+     * Trajectory: none
+     * Next State: Stop
+     */
+    class StartToCarousel extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryStartToCarousel());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            if(opMode.mecanumDrive.isIdle()){
+                if(!isDone) {
+                    stateTimer.reset();
+                    isDone = true;
+                    stateMachine.changeState(WOBBLE, new CarouselRun(0.4));
+                }
+                if(stateTimer.seconds()>4.0) {
+                    nextState(WOBBLE, new Stop());
+                    stateMachine.changeState(DRIVE, new CarouselToHub());
+                }
+
+            }
+        }
+    }
+
+    /**
+     * State
+     *
+     *
+     * Trajectory: none
+     * Next State: Stop
+     */
+    class CarouselToHub extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryCarouselToHub());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+
+            if(opMode.mecanumDrive.isIdle()) {
+                nextState(DRIVE, new Stop());
+                nextState(LAUNCHER, new Stop());
+            }
+        }
+    }
+
+
     /**
      * Park State
      *
@@ -147,8 +233,10 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         public void update() {
             super.update();
 
-            if(opMode.mecanumDrive.isIdle())
+            if(opMode.mecanumDrive.isIdle()) {
                 nextState(DRIVE, new Stop());
+                nextState(LAUNCHER, new Stop());
+            }
         }
     }
 
@@ -159,6 +247,19 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
             for (Executive.StateMachine.StateType type : Executive.StateMachine.StateType.values())
                 stateMachine.removeStateByType(type);
             opMode.stop();
+        }
+    }
+
+    static class CarouselRun extends Executive.StateBase<AutoOpmode> {
+        double power;
+        CarouselRun(double power) {
+            this.power = power;
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            opMode.motorUtility.setPower(Motors.CAROUSEL, power);
         }
     }
 
