@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public enum Servos {
 
-    ;
+    CARGO_GATE("cargo gate", Servo.Direction.FORWARD, ServoTypes.INDEPENDENT),
+    INTAKE("intake throw", Servo.Direction.REVERSE, ServoTypes.INDEPENDENT);
 
     private final String configName;
     private final Servo.Direction direction;

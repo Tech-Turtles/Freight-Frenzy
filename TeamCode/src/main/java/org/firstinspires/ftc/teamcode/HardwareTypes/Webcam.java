@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.HardwareTypes;
 
 public enum Webcam {
 
-    WEBCAM_1("webcam");
+    VISION("vision"),
+    REALSENSE("realsense");
 
     final String name;
 

@@ -362,7 +362,7 @@ public class RobotHardware extends OpMode {
     }
 
     public void loadVision() {
-        ringDetector = new UGCoffeeDetector(hardwareMap, Webcam.WEBCAM_1.getName());
+        ringDetector = new UGCoffeeDetector(hardwareMap, Webcam.VISION.getName());
         ringDetector.init();
     }
 
