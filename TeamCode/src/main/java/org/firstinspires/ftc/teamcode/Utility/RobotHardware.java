@@ -76,13 +76,13 @@ public class RobotHardware extends OpMode {
         private void getMotor(Motors motor) {
             m = motors.get(motor);
             if (m == null && packet != null)
-                packet.put("Motor Missing", motor.name());
+                packet.addLine("Motor Missing: " + motor.name());
         }
 
         public DcMotorEx getMotorReference(Motors motor) {
             DcMotorEx m = motors.get(motor);
             if (m == null && packet != null)
-                packet.put("Motor Missing", motor.name());
+                packet.addLine("Motor Missing: " + motor.name());
             return m;
         }
 
@@ -280,7 +280,7 @@ public class RobotHardware extends OpMode {
         private Servo getServo(Servos servo) {
             s = servos.get(servo);
             if (s == null && packet != null) {
-                packet.put("Servo Missing", servo.name());
+                packet.addLine("Servo Missing: " + servo.name());
             }
             return s;
         }
@@ -288,7 +288,7 @@ public class RobotHardware extends OpMode {
         private CRServo getContinuousServo(ContinuousServo servo) {
             cr = crServos.get(servo);
             if (cr == null && packet != null) {
-                packet.put("CRServo Missing", servo.name());
+                packet.addLine("CRServo Missing: " + servo.name());
             }
             return cr;
         }
@@ -352,7 +352,7 @@ public class RobotHardware extends OpMode {
     public RevColorSensorV3 getColorSensor(ColorSensor colorSensor) {
         RevColorSensorV3 revColorSensorV3 = colorSensors.get(colorSensor);
         if(revColorSensorV3 == null && packet != null)
-            packet.put("Sensor Missing", colorSensor.name());
+            packet.addLine("Sensor Missing: " + colorSensor.name());
         return revColorSensorV3;
     }
 
@@ -400,7 +400,7 @@ public class RobotHardware extends OpMode {
             expansionHub2.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         } catch (IllegalArgumentException | NullPointerException e) {
             if(packet != null)
-                packet.put("Error: ", e.getMessage());
+                packet.addLine("Error: " + e.getMessage());
             Log.wtf("RobotHardware: ", e.getMessage());
         }
         clearHubCache();
