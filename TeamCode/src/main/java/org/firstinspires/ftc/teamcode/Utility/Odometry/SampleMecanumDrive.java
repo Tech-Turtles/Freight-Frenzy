@@ -70,7 +70,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1.17409368;
+    public static double LATERAL_MULTIPLIER = 1.12008778;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -160,6 +160,12 @@ public class SampleMecanumDrive extends MecanumDrive {
             rightRear = hardwareMap.get(DcMotorEx.class, Motors.BACK_RIGHT.getConfigName());
             rightFront = hardwareMap.get(DcMotorEx.class, Motors.FRONT_RIGHT.getConfigName());
             middle = hardwareMap.get(DcMotorEx.class, Motors.MIDDLE.getConfigName());
+
+            leftFront.setDirection(Motors.FRONT_LEFT.getDirection());
+            leftRear.setDirection(Motors.BACK_LEFT.getDirection());
+            rightRear.setDirection(Motors.BACK_RIGHT.getDirection());
+            rightFront.setDirection(Motors.FRONT_RIGHT.getDirection());
+            middle.setDirection(Motors.MIDDLE.getDirection());
         }
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
