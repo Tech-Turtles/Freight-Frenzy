@@ -5,9 +5,10 @@ import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.HardwareTypes.ContinuousServo;
 import org.firstinspires.ftc.teamcode.HardwareTypes.Motors;
+import org.firstinspires.ftc.teamcode.HardwareTypes.Servos;
 import org.firstinspires.ftc.teamcode.Utility.*;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.TrajectoryRR;
@@ -15,7 +16,13 @@ import org.firstinspires.ftc.teamcode.Utility.Odometry.DriveConstants;
 import org.firstinspires.ftc.teamcode.Utility.Odometry.SampleMecanumDrive;
 
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.*;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_DRIVE_POS;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_PICKUP_POS;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.cargoClose;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.cargoOpen;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.deadzone;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.intakeExtend;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.intakeRetract;
 
 @Config
 @TeleOp(name="Manual", group="A")
@@ -28,6 +35,7 @@ public class Manual extends RobotHardware {
     public static double lateralSpeed = 1.0;
     public static double rotationSpeed = 1.0;
     public static double intakeSpeed = 1.0;
+    public static double carouselSpeed = 0.55;
 
     private final Executive.StateMachine<Manual> stateMachine;
     private TrajectoryRR trajectoryRR;
@@ -106,12 +114,24 @@ public class Manual extends RobotHardware {
         Vector2d robotFrameInput = fieldFrameInput
                 .rotated(-poseEstimate.getHeading() + Math.toRadians(90.0));
 
-        if(primary.AOnce()){
+        if(primary.AOnce()) {
             precisionMode = precisionMode == 1 ? precisionPercentage : 1;
         }
 
-        if(primary.XOnce()) {
-            currentDriveMode = currentDriveMode == DriveMode.NORMAL_ROBOT_CENTRIC ? DriveMode.NORMAL_FIELD_CENTRIC : DriveMode.NORMAL_ROBOT_CENTRIC;
+//        if(primary.startOnce()) {
+//            currentDriveMode = currentDriveMode == DriveMode.NORMAL_ROBOT_CENTRIC ? DriveMode.NORMAL_FIELD_CENTRIC : DriveMode.NORMAL_ROBOT_CENTRIC;
+//        }
+
+        if(primary.BOnce()) {
+            servoUtility.setAngle(Servos.CARGO_GATE, Range.clip(cargoClose, 0, 1));
+        } else if(primary.YOnce()) {
+            servoUtility.setAngle(Servos.CARGO_GATE, Range.clip(cargoOpen, 0, 1));
+        }
+
+        if(primary.dpadUpOnce()) {
+            servoUtility.setAngle(Servos.INTAKE, Range.clip(intakeExtend, 0, 1));
+        } else if(primary.dpadDownOnce()) {
+            servoUtility.setAngle(Servos.INTAKE, Range.clip(intakeRetract, 0, 1));
         }
 
         switch (currentDriveMode) {
@@ -136,21 +156,27 @@ public class Manual extends RobotHardware {
 
         mecanumDrive.setWeightedDrivePower(driveDirection);
 
-        if(primary.right_trigger > deadzone) {
+        if(primary.rightBumper()) {
             motorUtility.setPower(Motors.INTAKE, intakeSpeed);
-        } else if(primary.left_trigger > deadzone) {
+        } else if(primary.leftBumper()) {
             motorUtility.setPower(Motors.INTAKE, -intakeSpeed);
         } else {
             motorUtility.setPower(Motors.INTAKE, 0.0);
         }
 
-        if(primary.rightBumper()) {
-            motorUtility.setPower(Motors.CAROUSEL, 1.0);
-        } else if(primary.leftBumper()) {
-            motorUtility.setPower(Motors.CAROUSEL, -1.0);
+        if(primary.right_trigger > deadzone) {
+            motorUtility.setPower(Motors.CAROUSEL, primary.right_trigger * carouselSpeed);
+        } else if(primary.left_trigger > deadzone) {
+            motorUtility.setPower(Motors.CAROUSEL,  primary.left_trigger * -carouselSpeed);
         } else {
             motorUtility.setPower(Motors.CAROUSEL, 0.0);
         }
+        if(secondary.left_stick_y > 0.2)
+            stateMachine.changeState(LAUNCHER, new ArmManual());
+        else if(primary.dpadLeftOnce())
+            stateMachine.changeState(LAUNCHER, new ArmPickup());
+        else if(primary.dpadRightOnce())
+            stateMachine.changeState(LAUNCHER, new ArmDrive());
     }
 
     void drivetrainAdvancedControls() {
@@ -267,4 +293,42 @@ public class Manual extends RobotHardware {
         mecanumDrive.cancelFollowing();
         mecanumDrive.setDrivePower(new Pose2d());
     }
+
+    static class ArmPickup extends Executive.StateBase<Manual> {
+        @Override
+        public void update() {
+            super.update();
+            if(opMode.secondary.left_stick_y > 0.2)
+                opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
+            else
+                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_PICKUP_POS, 1.0);
+        }
+    }
+
+    static class ArmDrive extends Executive.StateBase<Manual> {
+        @Override
+        public void update() {
+            super.update();
+            if(opMode.secondary.left_stick_y > 0.2)
+                opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
+            else
+                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 1.0);
+        }
+    }
+
+    static class ArmManual extends Executive.StateBase<Manual> {
+        @Override
+        public void update() {
+            super.update();
+            opMode.motorUtility.setPower(Motors.SLIDE_ARM, opMode.secondary.left_stick_y);
+        }
+    }
+
+    static class Stop extends Executive.StateBase<Manual> {
+        @Override
+        public void update() {
+            super.update();
+        }
+    }
+
 }
