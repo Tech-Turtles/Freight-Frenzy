@@ -16,12 +16,12 @@ import kotlin.math.sqrt
 class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
     val drive: SampleMecanumDrive = sampleMecanumDrive
 
-    val START_DEPOT = Pose2d(0.0, -70.0 + (ROBOT_WIDTH / 2), 0.0)
-    val START_CAROUSEL = Pose2d(-46.5, -61.25, 0.0)
-    private val CAROUSEL_ALIGN = Pose2d(-53.5, -55.75, 0.0)
-    private val SHIPPING_HUB_PARK = Pose2d(-61.75, -33.0, 0.0)
-    private val VERTICAL_BARRIER_ALIGN = Pose2d(0.0, -40 - (ROBOT_WIDTH / 2), 0.0)
-    private val WAREHOUSE_PARK = Pose2d(30.0 + ROBOT_LENGTH, -37 - (ROBOT_WIDTH / 2), 0.0)
+    var START_DEPOT = Pose2d(0.0, -70.0 + (ROBOT_WIDTH / 2), 0.0)
+    var START_CAROUSEL = Pose2d(-46.5, -61.25, 0.0)
+    private var CAROUSEL_ALIGN = Pose2d(-53.5, -55.75, 0.0)
+    private var SHIPPING_HUB_PARK = Pose2d(-61.75, -33.0, 0.0)
+    private var VERTICAL_BARRIER_ALIGN = Pose2d(0.0, -40 - (ROBOT_WIDTH / 2), 0.0)
+    private var WAREHOUSE_PARK = Pose2d(30.0 + ROBOT_LENGTH, -37 - (ROBOT_WIDTH / 2), 0.0)
 
     var trajectoryStartToPark: Trajectory? = null
     var trajectoryStartToCarousel: Trajectory? = null
@@ -51,10 +51,14 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
         ringVelocityConstraint = getMinVelocityConstraint(ringVelocity)
         ringAccelerationConstraint = getMinAccelerationConstraint(ringAcceleration)
 
-        buildTrajectories()
+        buildTrajectories(AllianceColor.NONE)
     }
 
-    private fun buildTrajectories() {
+    fun resetTrajectories(color: AllianceColor) {
+        buildTrajectories(color)
+    }
+
+    private fun buildTrajectories(color: AllianceColor) {
 
         // Example
 //        val tempTraj: Trajectory =
@@ -62,24 +66,56 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
 //                        .splineToConstantHeading(CENTER.vec(), (20.0 + 90.0).toRadians)
 //                        .build()
 //        this.mainTraj = tempTraj
+        // Dumb way to do different trajectories based on color (not racist I swear)
+        when(color) {
+            AllianceColor.BLUE -> {
+                START_DEPOT = Pose2d(0.0, 70.0 - (ROBOT_WIDTH / 2), 0.0)
+                    START_CAROUSEL = Pose2d(-38.0, 61.0, (-90.0).toRadians)
+                var CAROUSEL_INTER = Pose2d(-46.5, 48.75, (-90.0).toRadians)
+                    CAROUSEL_ALIGN = Pose2d(-61.5, 48.75, (-90.0).toRadians)
+                var CAROUSEL = Pose2d(-61.5, 58.0, (-90.0).toRadians)
+                SHIPPING_HUB_PARK = Pose2d(-61.75, 40.0, 0.0)
+                VERTICAL_BARRIER_ALIGN = Pose2d(0.0, 40 + (ROBOT_WIDTH / 2), 0.0)
+                WAREHOUSE_PARK = Pose2d(30.0 + ROBOT_LENGTH, 37 + (ROBOT_WIDTH / 2), 0.0)
+                val startToPark: Trajectory =
+                        trajectoryBuilder(START_DEPOT, (-90.0).toRadians)
+                                .lineToConstantHeading(VERTICAL_BARRIER_ALIGN.vec())
+                                .splineToConstantHeading(WAREHOUSE_PARK.vec(), 0.0)
+                                .build()
+                this.trajectoryStartToPark = startToPark
 
-        val startToPark: Trajectory =
-                trajectoryBuilder(START_DEPOT, (-90.0).toRadians)
-                        .lineToConstantHeading(VERTICAL_BARRIER_ALIGN.vec())
-                        .splineToConstantHeading(WAREHOUSE_PARK.vec(), 0.0)
-                        .build()
-        this.trajectoryStartToPark = startToPark
+                val startToCarousel: Trajectory =
+                        trajectoryBuilder(START_CAROUSEL, (-90.0).toRadians)
+                                .lineToConstantHeading(CAROUSEL_INTER.vec())
+                                .splineToConstantHeading(CAROUSEL_ALIGN.vec(), (-90.0).toRadians)
+                                .splineToConstantHeading(CAROUSEL.vec(), (-90.0).toRadians)
+                                .build()
+                this.trajectoryStartToCarousel = startToCarousel
+                val carouselToHub: Trajectory =
+                        trajectoryBuilder(CAROUSEL, 0.0)
+                                .lineToConstantHeading(SHIPPING_HUB_PARK.vec())
+                                .build()
+                this.trajectoryCarouselToHub = carouselToHub
+            } else -> {
+                val startToPark: Trajectory =
+                        trajectoryBuilder(START_DEPOT, (-90.0).toRadians)
+                                .lineToConstantHeading(VERTICAL_BARRIER_ALIGN.vec())
+                                .splineToConstantHeading(WAREHOUSE_PARK.vec(), 0.0)
+                                .build()
+                this.trajectoryStartToPark = startToPark
 
-        val startToCarousel: Trajectory =
-                trajectoryBuilder(START_CAROUSEL, (180.0).toRadians)
-                        .lineToConstantHeading(CAROUSEL_ALIGN.vec())
-                        .build()
-        this.trajectoryStartToCarousel = startToCarousel
-        val carouselToHub: Trajectory =
-                trajectoryBuilder(CAROUSEL_ALIGN, (-90.0).toRadians)
-                        .lineToConstantHeading(SHIPPING_HUB_PARK.vec())
-                        .build()
-        this.trajectoryCarouselToHub = carouselToHub
+                val startToCarousel: Trajectory =
+                        trajectoryBuilder(START_CAROUSEL, (180.0).toRadians)
+                                .lineToConstantHeading(CAROUSEL_ALIGN.vec())
+                                .build()
+                this.trajectoryStartToCarousel = startToCarousel
+                val carouselToHub: Trajectory =
+                        trajectoryBuilder(CAROUSEL_ALIGN, (-90.0).toRadians)
+                                .lineToConstantHeading(SHIPPING_HUB_PARK.vec())
+                                .build()
+                this.trajectoryCarouselToHub = carouselToHub
+            }
+        }
     }
 
     fun toVector2d(pose: Pose2d): Vector2d {

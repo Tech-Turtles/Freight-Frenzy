@@ -14,6 +14,7 @@ import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Exe
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.LAUNCHER;
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.WOBBLE;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_DRIVE_POS;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_PICKUP_POS;
 import static org.firstinspires.ftc.teamcode.Utility.RobotHardware.df;
 
 @Config
@@ -38,6 +39,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
 
     public void init() {
         trajectoryRR = new TrajectoryRR(opmode.mecanumDrive);
+        trajectoryRR.resetTrajectories(allianceColor);
         stateMachine.changeState(DRIVE, new Start());
         stateMachine.init();
     }
@@ -144,19 +146,6 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         }
     }
 
-    class ArmDrive extends Executive.StateBase<AutoOpmode> {
-        @Override
-        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
-            super.init(stateMachine);
-        }
-
-        @Override
-        public void update() {
-            super.update();
-            isDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 1.0);
-        }
-    }
-
     /**
      * State
      *
@@ -178,7 +167,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                 if(!isDone) {
                     stateTimer.reset();
                     isDone = true;
-                    stateMachine.changeState(WOBBLE, new CarouselRun(0.4));
+                    stateMachine.changeState(WOBBLE, new CarouselRun(allianceColor.equals(AllianceColor.RED) ? 1:-1 * 0.4));
                 }
                 if(stateTimer.seconds()>4.0) {
                     nextState(WOBBLE, new Stop());
@@ -207,10 +196,8 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         public void update() {
             super.update();
 
-            if(opMode.mecanumDrive.isIdle()) {
-                nextState(DRIVE, new Stop());
-                nextState(LAUNCHER, new Stop());
-            }
+            if(opMode.mecanumDrive.isIdle())
+                nextState(DRIVE, new ResetForDriving());
         }
     }
 
@@ -234,9 +221,32 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
             super.update();
 
             if(opMode.mecanumDrive.isIdle()) {
-                nextState(DRIVE, new Stop());
-                nextState(LAUNCHER, new Stop());
+                nextState(DRIVE, new ResetForDriving());
             }
+        }
+    }
+
+    /**
+     * Park State
+     *
+     *
+     * Trajectory: none
+     * Next State: Stop
+     */
+    class ResetForDriving extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            nextState(LAUNCHER, new ArmPickup());
+            stateMachine.removeStateByType(WOBBLE);
+        }
+
+        @Override
+        public void update() {
+            super.update();
+
+            if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
+                nextState(DRIVE, new Stop());
         }
     }
 
@@ -247,6 +257,34 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
             for (Executive.StateMachine.StateType type : Executive.StateMachine.StateType.values())
                 stateMachine.removeStateByType(type);
             opMode.stop();
+        }
+    }
+
+
+    static class ArmPickup extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            isDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_PICKUP_POS, 1.0);
+        }
+    }
+
+
+    static class ArmDrive extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            isDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 1.0);
         }
     }
 
