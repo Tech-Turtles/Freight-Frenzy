@@ -317,10 +317,18 @@ public class Manual extends RobotHardware {
     }
 
     static class ArmManual extends Executive.StateBase<Manual> {
+        int armPos = 0;
+        @Override
+        public void init(Executive.StateMachine<Manual> stateMachine) {
+            super.init(stateMachine);
+            armPos = opMode.motorUtility.getEncoderValue(Motors.SLIDE_ARM);
+        }
+
         @Override
         public void update() {
             super.update();
-            opMode.motorUtility.setPower(Motors.SLIDE_ARM, opMode.secondary.left_stick_y);
+            armPos += (int) opMode.secondary.left_stick_y * 5;
+            opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, armPos, 1.0);
         }
     }
 
