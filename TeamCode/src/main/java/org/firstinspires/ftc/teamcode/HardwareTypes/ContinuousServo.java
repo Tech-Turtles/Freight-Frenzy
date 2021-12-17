@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public enum ContinuousServo {
 
-    ;
+    CRANE("crane", DcMotorSimple.Direction.REVERSE, ServoTypes.INDEPENDENT);
 
     private final String configName;
     private final DcMotorSimple.Direction direction;

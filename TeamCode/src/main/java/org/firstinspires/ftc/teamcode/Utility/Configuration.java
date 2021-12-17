@@ -10,11 +10,25 @@ public class Configuration {
     public static final double deadzone = 0.49;
     public static final double ROBOT_LENGTH = 17.0;
     public static final double ROBOT_WIDTH = 17.25;
-    public static int ARM_DRIVE_POS = -300;
-    public static int ARM_PICKUP_POS = 0;
-    public static double cargoClose = 0.3;
-    public static double cargoOpen = 0.8;
-    public static double intakeExtend = 0.3;
+    public static int ARM_DRIVE_POS = 1300;
+    public static int ARM_HIGH_POS = 1880;
+    public static int ARM_LOW_POS = 500;
+    public static int ARM_PICKUP_POS = 30;
+    public static int ARM_MAX = 1980;
+    public static double intakeExtend = 0.4;
     public static double intakeRetract = 0;
 
+    public enum ServoPosition {
+        INTAKE(0.0),
+        CRADLE(0.3),
+        DROP(1.0);
+        private final double pos;
+        ServoPosition(double pos) {
+            this.pos = pos;
+        }
+
+        public double getPos() {
+            return pos;
+        }
+    }
 }

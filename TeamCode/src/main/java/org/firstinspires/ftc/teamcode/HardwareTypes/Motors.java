@@ -10,10 +10,9 @@ public enum Motors {
     FRONT_RIGHT("front right",  ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_USING_ENCODER),
     BACK_LEFT(  "back left",    ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_USING_ENCODER),
     BACK_RIGHT( "back right",   ExpansionHubs.HUB1, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_USING_ENCODER),
-    MIDDLE(     "middle",       ExpansionHubs.HUB2, MotorTypes.DRIVE, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_WITHOUT_ENCODER),
-    INTAKE(     "intake",       ExpansionHubs.HUB2, MotorTypes.DRIVE, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.FLOAT, RunMode.RUN_WITHOUT_ENCODER),
+    INTAKE(     "intake",       ExpansionHubs.HUB2, MotorTypes.DRIVE, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.FLOAT, RunMode.RUN_WITHOUT_ENCODER),
     CAROUSEL(   "carousel",     ExpansionHubs.HUB2, MotorTypes.OTHER, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_USING_ENCODER),
-    SLIDE_ARM(   "slide",       ExpansionHubs.HUB2, MotorTypes.OTHER, DcMotorSimple.Direction.FORWARD, ZeroPowerBehavior.BRAKE, RunMode.RUN_USING_ENCODER);
+    SLIDE_ARM(  "slide",       ExpansionHubs.HUB2, MotorTypes.OTHER, DcMotorSimple.Direction.REVERSE, ZeroPowerBehavior.BRAKE, RunMode.RUN_USING_ENCODER);
     
     private final String configName;
     private final ExpansionHubs expansionHub;

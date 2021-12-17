@@ -99,7 +99,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private LinkedList<Pose2d> poseHistory;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront, middle;
+    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
     private BNO055IMU imu;
 
@@ -153,19 +153,16 @@ public class SampleMecanumDrive extends MecanumDrive {
             leftRear = opmode.motorUtility.getMotorReference(Motors.BACK_LEFT);
             rightRear = opmode.motorUtility.getMotorReference(Motors.BACK_RIGHT);
             rightFront = opmode.motorUtility.getMotorReference(Motors.FRONT_RIGHT);
-            middle = opmode.motorUtility.getMotorReference(Motors.MIDDLE);
         } else {
             leftFront = hardwareMap.get(DcMotorEx.class, Motors.FRONT_LEFT.getConfigName());
             leftRear = hardwareMap.get(DcMotorEx.class, Motors.BACK_LEFT.getConfigName());
             rightRear = hardwareMap.get(DcMotorEx.class, Motors.BACK_RIGHT.getConfigName());
             rightFront = hardwareMap.get(DcMotorEx.class, Motors.FRONT_RIGHT.getConfigName());
-            middle = hardwareMap.get(DcMotorEx.class, Motors.MIDDLE.getConfigName());
 
             leftFront.setDirection(Motors.FRONT_LEFT.getDirection());
             leftRear.setDirection(Motors.BACK_LEFT.getDirection());
             rightRear.setDirection(Motors.BACK_RIGHT.getDirection());
             rightFront.setDirection(Motors.FRONT_RIGHT.getDirection());
-            middle.setDirection(Motors.MIDDLE.getDirection());
         }
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
@@ -424,9 +421,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         } catch (NullPointerException ignore) {}
         try {
             rightFront.setPower(v3);
-        } catch (NullPointerException ignore) {}
-        try {
-            middle.setPower(Range.clip(v + v3, -1, 1));
         } catch (NullPointerException ignore) {}
     }
 
