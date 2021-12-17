@@ -84,7 +84,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                     setupInitialPosition(trajectoryRR.getSTART_CAROUSEL());
                     nextState(DRIVE, new Initial());
                     break;
-                case DEPOT:
+                case WAREHOUSE:
                     setupInitialPosition(trajectoryRR.getSTART_DEPOT());
                     nextState(DRIVE, new Initial());
                     break;
@@ -121,7 +121,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                     if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
                         nextState(DRIVE, new StartToCarousel());
                     break;
-                case DEPOT:
+                case WAREHOUSE:
                     if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
                         nextState(DRIVE, new Park());
             }
@@ -156,7 +156,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                 case CAROUSEL:
 
                     break;
-                case DEPOT:
+                case WAREHOUSE:
 
             }
         }
@@ -183,7 +183,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                 if(!isDone) {
                     stateTimer.reset();
                     isDone = true;
-                    stateMachine.changeState(WOBBLE, new CarouselRun(allianceColor.equals(AllianceColor.RED) ? 1:-1 * 0.4));
+                    stateMachine.changeState(WOBBLE, new CarouselRun(allianceColor.equals(AllianceColor.RED) ? 0.3:-0.3));
                 }
                 if(stateTimer.seconds()>4.0) {
                     nextState(WOBBLE, new Stop());
