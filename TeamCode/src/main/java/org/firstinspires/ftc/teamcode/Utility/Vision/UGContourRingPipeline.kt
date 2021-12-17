@@ -91,10 +91,11 @@ class UGContourRingPipeline(
 
         /** width of the camera in use, defaulted to 320 as that is most common in examples **/
         var CAMERA_WIDTH = 320
+        var CAMERA_HEIGHT = 240
 
         /** Horizon value in use, anything above this value (less than the value) since
          * (0, 0) is the top left of the camera frame **/
-        var HORIZON: Int = ((100.0 / 320.0) * CAMERA_WIDTH).toInt()
+        var HORIZON: Int = ((120.0 / 240.0) * CAMERA_HEIGHT).toInt()
 
         /** algorithmically calculated minimum width for width check based on camera width **/
         val MIN_WIDTH
@@ -150,7 +151,7 @@ class UGContourRingPipeline(
 
                 val w = rect.width
                 // checking if the rectangle is below the horizon
-                if (w > maxWidth && rect.y + rect.height > HORIZON) {
+                if (w > maxWidth) {
                     maxWidth = w
                     maxRect = rect
                 }
@@ -165,12 +166,12 @@ class UGContourRingPipeline(
             Imgproc.line(
                     ret,
                     Point(
-                            .0,
-                            HORIZON.toDouble()
+                            HORIZON.toDouble(),
+                            .0
                     ),
                     Point(
-                            CAMERA_WIDTH.toDouble(),
-                            HORIZON.toDouble()
+                            HORIZON.toDouble(),
+                            CAMERA_HEIGHT.toDouble()
                     ),
                     Scalar(
                             255.0,
@@ -193,10 +194,10 @@ class UGContourRingPipeline(
                 /** checks if aspectRatio is greater than BOUND_RATIO
                  * to determine whether stack is ONE or FOUR
                  */
-                if (aspectRatio > BOUND_RATIO)
-                    DetectionAmount.NONE
+                if (maxRect.x > HORIZON)
+                    DetectionAmount.RIGHT
                 else
-                    DetectionAmount.NONE
+                    DetectionAmount.LEFT
             } else {
                 DetectionAmount.NONE
             }

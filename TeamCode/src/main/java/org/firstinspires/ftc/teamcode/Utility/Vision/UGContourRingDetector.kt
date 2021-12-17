@@ -118,12 +118,12 @@ class UGContourRingDetector( // primary constructor
                 }
         )
 
-        camera.openCameraDeviceAsync {
-            camera.startStreaming(320,
-                    240,
-                    OpenCvCameraRotation.UPRIGHT,
-            )
-        }
+//        camera.openCameraDeviceAsync {
+//            camera.startStreaming(320,
+//                    240,
+//                    OpenCvCameraRotation.UPRIGHT,
+//            )
+//        }
     }
 
 }

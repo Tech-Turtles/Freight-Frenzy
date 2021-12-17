@@ -25,9 +25,16 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
     private final Executive.StateMachine<AutoOpmode> stateMachine;
     private final AllianceColor allianceColor;
     private final StartPosition startPosition;
+    private ShippingHubLevel level = ShippingHubLevel.TOP;
     private TrajectoryRR trajectoryRR;
 
     private DetectionAmount canSee = DetectionAmount.NONE;
+
+    enum ShippingHubLevel {
+        TOP,
+        MIDDLE,
+        BOTTOM
+    }
 
     public RobotStateContext(AutoOpmode opmode, AllianceColor allianceColor, StartPosition startPosition) {
         this.opmode = opmode;
@@ -133,8 +140,17 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         public void update() {
             super.update();
 
-            if(opMode.ringDetector != null)
-                canSee = opMode.ringDetector.getHeight();
+            switch (opMode.initializationDetectionAmount) {
+                case LEFT:
+                    level = allianceColor.equals(AllianceColor.BLUE) ? ShippingHubLevel.BOTTOM : ShippingHubLevel.BOTTOM;
+                    break;
+                case RIGHT:
+                    level = ShippingHubLevel.MIDDLE;
+                    break;
+                case NONE:
+                    // Redundant
+                    level = ShippingHubLevel.TOP;
+            }
 
             switch (startPosition) {
                 case CAROUSEL:

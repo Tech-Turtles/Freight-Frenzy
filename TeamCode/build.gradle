@@ -21,7 +21,7 @@ dependencies {
     implementation project(':FtcRobotController')
 
     // Add On Libraries
-    api 'org.openftc:easyopencv:1.4.1'
+    api 'org.openftc:easyopencv:1.5.1'
     implementation 'com.acmerobotics.roadrunner:core:0.5.3'
     implementation group: 'org.json', name: 'json', version: '20180813'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-math3

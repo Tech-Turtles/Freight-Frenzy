@@ -59,7 +59,7 @@ public class AutoOpmode extends RobotHardware {
     public void init() {
         super.init();
         robotStateContext = new RobotStateContext(this, robotColor, robotStartPos);
-//        new Thread(this::loadVision).start();
+        new Thread(this::loadVision).start();
         mecanumDrive = new SampleMecanumDrive(hardwareMap, this);
         mecanumDrive.setPoseEstimate(new Pose2d(0, 0, 0));
 
@@ -72,8 +72,8 @@ public class AutoOpmode extends RobotHardware {
         super.init_loop();
         primary.update();
 
-        if(ringDetector != null) {
-            initializationDetectionAmount = ringDetector.getHeight();
+        if(levelDetector != null) {
+            initializationDetectionAmount = levelDetector.getHeight();
             telemetry.addData("Initialization Ring Amount", initializationDetectionAmount.name());
             if(packet != null)
                 packet.put("Initialization Ring Amount", initializationDetectionAmount.name());

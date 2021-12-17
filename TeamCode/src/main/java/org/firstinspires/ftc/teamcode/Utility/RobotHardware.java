@@ -61,7 +61,7 @@ public class RobotHardware extends OpMode {
     // Controller objects that act as a more intuitive wrapper for the FTC gamepad class.
     public Controller primary, secondary;
 
-    public UGCoffeeDetector ringDetector;
+    public UGCoffeeDetector levelDetector;
     public SampleMecanumDrive mecanumDrive;
     // Acme dashboard objects.
     private FtcDashboard dashboard;
@@ -362,8 +362,8 @@ public class RobotHardware extends OpMode {
     }
 
     public void loadVision() {
-        ringDetector = new UGCoffeeDetector(hardwareMap, Webcam.VISION.getName());
-        ringDetector.init();
+        levelDetector = new UGCoffeeDetector(hardwareMap, Webcam.VISION.getName());
+        levelDetector.init();
     }
 
     public void clearHubCache() {
