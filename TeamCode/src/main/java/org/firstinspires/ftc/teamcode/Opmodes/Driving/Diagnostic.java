@@ -19,7 +19,7 @@ import java.util.List;
 @TeleOp(name="Diagnostic", group="C")
 public class Diagnostic extends Manual {
 
-    List<TelemetryLog> telemetryLogList = new ArrayList<>();
+//    List<TelemetryLog> telemetryLogList = new ArrayList<>();
 
     @Override
     public void init() {
@@ -42,7 +42,7 @@ public class Diagnostic extends Manual {
     public void loop() {
         super.loop();
 
-        telemetryLogList.add(new TelemetryLog(this));
+//        telemetryLogList.add(new TelemetryLog(this));
 
         for (MotorTypes type : MotorTypes.values()) {
             telemetry.addLine(type.name());
@@ -68,7 +68,7 @@ public class Diagnostic extends Manual {
     @Override
     public void stop() {
         super.stop();
-        File logFile = LoggingUtil.getLogFile("debugLogFile.csv");
-        LoggingUtil.saveTelemetryLogListToFile(logFile, telemetryLogList);
+//        File logFile = LoggingUtil.getLogFile("debugLogFile.csv");
+//        LoggingUtil.saveTelemetryLogListToFile(logFile, telemetryLogList);
     }
 }
