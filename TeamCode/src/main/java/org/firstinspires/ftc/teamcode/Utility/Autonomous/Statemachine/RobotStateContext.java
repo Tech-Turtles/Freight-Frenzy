@@ -124,15 +124,20 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         @Override
         public void update() {
             super.update();
-
-            switch (startPosition) {
-                case CAROUSEL:
-                    if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
-                        nextState(DRIVE, new Scan());
-                    break;
-                case WAREHOUSE:
-                    if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
-                        nextState(DRIVE, new Park());
+            if(!isDone) {
+                isDone = true;
+                stateTimer.reset();
+            }
+            if(stateTimer.seconds() > 8.0) {
+                switch (startPosition) {
+                    case CAROUSEL:
+                        if (stateMachine.getStateReferenceByType(LAUNCHER).isDone)
+                            nextState(DRIVE, new Scan());
+                        break;
+                    case WAREHOUSE:
+                        if (stateMachine.getStateReferenceByType(LAUNCHER).isDone)
+                            nextState(DRIVE, new Park());
+                }
             }
         }
     }
@@ -199,9 +204,9 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                 }
                 if(stateTimer.seconds() > 2.0) {
                     nextState(LAUNCHER, new ResetLiftToIntake());
-                    if(allianceColor.equals(AllianceColor.RED))
-                        nextState(DRIVE, new CarouselToDepotPark());
-                    else
+//                    if(allianceColor.equals(AllianceColor.RED))
+//                        nextState(DRIVE, new CarouselToDepotPark());
+//                    else
                         nextState(DRIVE, new HubToCarousel());
                 }
 
@@ -236,9 +241,9 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         @Override
         public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
             super.init(stateMachine);
-            if(allianceColor.equals(AllianceColor.RED))
-                opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryHubToDepotPark());
-            else
+//            if(allianceColor.equals(AllianceColor.RED))
+//                opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryHubToDepotPark());
+//            else
                 opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryCarouselToDepot());
         }
 

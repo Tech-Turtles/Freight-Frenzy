@@ -236,7 +236,7 @@ public class Manual extends RobotHardware {
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
                 opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
             else
-                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_PICKUP_POS, 1.0);
+                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_PICKUP_POS, 0.8);
         }
     }
 
@@ -247,7 +247,7 @@ public class Manual extends RobotHardware {
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
                 opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
             else
-                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 1.0);
+                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 0.8);
         }
     }
 
@@ -258,7 +258,7 @@ public class Manual extends RobotHardware {
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
                 opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
             else
-                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_HIGH_POS, 1.0);
+                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_HIGH_POS, 0.8);
         }
     }
 
@@ -269,7 +269,7 @@ public class Manual extends RobotHardware {
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
                 opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
             else
-                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 1.0);
+                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 0.8);
         }
     }
 
@@ -287,7 +287,7 @@ public class Manual extends RobotHardware {
             super.update();
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2) {
                 if (opMode.secondary.left_stick_y < 0.2 || opMode.motorUtility.getEncoderValue(Motors.SLIDE_ARM) < ARM_MAX) {
-                    opMode.motorUtility.setPower(Motors.SLIDE_ARM, -opMode.secondary.left_stick_y);
+                    opMode.motorUtility.setPower(Motors.SLIDE_ARM, -opMode.secondary.left_stick_y*0.8);
                     armPos = opMode.motorUtility.getEncoderValue(Motors.SLIDE_ARM);
                 }
             } else {
