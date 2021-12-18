@@ -32,7 +32,7 @@ public class AutoOpmode extends RobotHardware {
     public static class AutoRedBuild extends AutoOpmode {
         @Override public void init() {
             robotColor = AllianceColor.RED;
-            robotStartPos = StartPosition.DEPOT;
+            robotStartPos = StartPosition.WAREHOUSE;
             super.init();
         }
     }
@@ -50,7 +50,7 @@ public class AutoOpmode extends RobotHardware {
     public static class AutoBlueBuild extends AutoOpmode {
         @Override public void init() {
             robotColor = AllianceColor.BLUE;
-            robotStartPos = StartPosition.DEPOT;
+            robotStartPos = StartPosition.WAREHOUSE;
             super.init();
         }
     }

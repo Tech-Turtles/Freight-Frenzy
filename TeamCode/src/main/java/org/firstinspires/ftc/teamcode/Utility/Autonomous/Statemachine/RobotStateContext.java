@@ -2,18 +2,24 @@ package org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.HardwareTypes.ContinuousServo;
 import org.firstinspires.ftc.teamcode.HardwareTypes.Motors;
+import org.firstinspires.ftc.teamcode.HardwareTypes.Servos;
 import org.firstinspires.ftc.teamcode.Opmodes.Autonomous.AutoOpmode;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.AllianceColor;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.StartPosition;
 import org.firstinspires.ftc.teamcode.Utility.Autonomous.TrajectoryRR;
+import org.firstinspires.ftc.teamcode.Utility.Configuration;
 import org.firstinspires.ftc.teamcode.Utility.Vision.DetectionAmount;
 
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.DRIVE;
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.LAUNCHER;
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.WOBBLE;
-import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_DRIVE_POS;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_HIGH_POS;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_LOW_POS;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_MIDDLE_POS;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_PICKUP_POS;
 import static org.firstinspires.ftc.teamcode.Utility.RobotHardware.df;
 
@@ -79,13 +85,16 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         @Override
         public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
             super.init(stateMachine);
+            if(allianceColor.equals(AllianceColor.RED))
+                trajectoryRR.resetTrajectories(AllianceColor.RED);
             switch (startPosition) {
                 case CAROUSEL:
-                    setupInitialPosition(trajectoryRR.getSTART_CAROUSEL());
+                    setupInitialPosition(trajectoryRR.getStartCarousel());
                     nextState(DRIVE, new Initial());
                     break;
                 case WAREHOUSE:
-                    setupInitialPosition(trajectoryRR.getSTART_DEPOT());
+                    //ToDo Use the correct position
+//                    setupInitialPosition(trajectoryRR.getStartWarehouse());
                     nextState(DRIVE, new Initial());
                     break;
                 default:
@@ -119,7 +128,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
             switch (startPosition) {
                 case CAROUSEL:
                     if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
-                        nextState(DRIVE, new StartToCarousel());
+                        nextState(DRIVE, new Scan());
                     break;
                 case WAREHOUSE:
                     if(stateMachine.getStateReferenceByType(LAUNCHER).isDone)
@@ -154,11 +163,167 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
 
             switch (startPosition) {
                 case CAROUSEL:
-
+                    nextState(DRIVE, new StartToHub());
                     break;
                 case WAREHOUSE:
+            }
+        }
+    }
+
+    class StartToHub extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            stateMachine.removeStateByType(LAUNCHER);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryStartToHub());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            if(!opMode.mecanumDrive.isIdle()) {
+                opMode.servoUtility.setAngle(Servos.CARGO_GATE, Configuration.ServoPosition.CRADLE.getPos());
+                if (stateTimer.seconds() > 0.3)
+                    opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 1.0);
+                return;
+            }
+
+            if(!stateMachine.getCurrentStateByType(LAUNCHER).getSimpleName().equals(LiftHubLevel.class.getSimpleName()))
+                nextState(LAUNCHER, new LiftHubLevel(level));
+
+            if(stateMachine.getStateReferenceByType(LAUNCHER).isDone) {
+                opMode.servoUtility.setAngle(Servos.CARGO_GATE, Configuration.ServoPosition.DROP.getPos());
+                if(!isDone) {
+                    stateTimer.reset();
+                    isDone = true;
+                }
+                if(stateTimer.seconds() > 2.0) {
+                    nextState(LAUNCHER, new ResetLiftToIntake());
+                    if(allianceColor.equals(AllianceColor.RED))
+                        nextState(DRIVE, new CarouselToDepotPark());
+                    else
+                        nextState(DRIVE, new HubToCarousel());
+                }
 
             }
+        }
+    }
+
+    class HubToCarousel extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryHubToCarousel());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            if(!opMode.mecanumDrive.isIdle()) {
+                stateTimer.reset();
+                return;
+            }
+
+            opMode.motorUtility.setPower(Motors.CAROUSEL, (allianceColor.equals(AllianceColor.BLUE) ? -1 : 1) * 0.6 * Range.clip(stateTimer.seconds(), 0.0, 1.0));
+
+            if(stateTimer.seconds() > 5.0) {
+                nextState(DRIVE, new CarouselToDepotPark());
+            }
+        }
+    }
+
+    class CarouselToDepotPark extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            if(allianceColor.equals(AllianceColor.RED))
+                opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryHubToDepotPark());
+            else
+                opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryCarouselToDepot());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+
+            if(opMode.mecanumDrive.isIdle()) {
+                nextState(DRIVE, new Stop());
+            }
+        }
+    }
+
+    static class ResetLiftToIntake extends Executive.StateBase<AutoOpmode> {
+        double craneTime = 1.8;
+        boolean aBoolean = false;
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.servoUtility.setAngle(Servos.CARGO_GATE, Configuration.ServoPosition.INTAKE.getPos());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            if(stateTimer.seconds() < craneTime)
+                opMode.servoUtility.setPower(ContinuousServo.CRANE, 1.0);
+            else {
+                opMode.servoUtility.setPower(ContinuousServo.CRANE, 0);
+                if(!isDone) {
+                    if(!aBoolean) {
+                        opMode.servoUtility.setPower(ContinuousServo.CRANE, 1.0);
+                        aBoolean = true;
+                    } else {
+                        opMode.servoUtility.setPower(ContinuousServo.CRANE, 0);
+                        isDone = true;
+                    }
+                }
+            }
+            opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 1.0);
+        }
+    }
+
+    static class LiftHubLevel extends Executive.StateBase<AutoOpmode> {
+        ShippingHubLevel hubLevel;
+        double craneTime = 1.8;
+        boolean armDone = false;
+
+        LiftHubLevel(ShippingHubLevel hubLevel) {
+            this.hubLevel = hubLevel;
+        }
+
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            if(hubLevel.equals(ShippingHubLevel.MIDDLE)) craneTime = 1.5;
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            switch (hubLevel) {
+                case TOP:
+                    armDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_HIGH_POS, 1.0);
+                    if (stateTimer.seconds() < craneTime)
+                        opMode.servoUtility.setPower(ContinuousServo.CRANE, -1.0);
+                    else
+                        opMode.servoUtility.setPower(ContinuousServo.CRANE, 0);
+                    break;
+                case BOTTOM:
+                    armDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 1.0);
+                    if (stateTimer.seconds() < craneTime)
+                        opMode.servoUtility.setPower(ContinuousServo.CRANE, -1.0);
+                    else
+                        opMode.servoUtility.setPower(ContinuousServo.CRANE, 0);
+                    break;
+                case MIDDLE:
+                    armDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_MIDDLE_POS, 1.0);
+                    if (stateTimer.seconds() < craneTime)
+                        opMode.servoUtility.setPower(ContinuousServo.CRANE, -1.0);
+                    else
+                        opMode.servoUtility.setPower(ContinuousServo.CRANE, 0);
+            }
+
+            isDone = stateTimer.seconds() > craneTime && armDone;
         }
     }
 
@@ -229,7 +394,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         @Override
         public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
             super.init(stateMachine);
-            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryStartToPark());
+//            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryStartToPark());
         }
 
         @Override
@@ -300,7 +465,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         @Override
         public void update() {
             super.update();
-            isDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 1.0);
+            isDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 1.0);
         }
     }
 
