@@ -6,9 +6,10 @@
             <goBILDA5202SeriesMotor     name="back right"   port="1" />
             <goBILDA5202SeriesMotor     name="back left"    port="2" />
             <goBILDA5202SeriesMotor     name="front left"   port="3" />
-            <Servo                      name="cargo gate"   port="0"/>
+            <Servo                      name="basket"       port="0"/>
             <ContinuousRotationServo    name="crane"        port="1"/>
             <Servo                      name="intake throw" port="2"/>
+            <Servo                      name="cargo gate"   port="3"/>
             <LynxEmbeddedIMU            name="IMU_1"        port="0" bus="0" />
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2">

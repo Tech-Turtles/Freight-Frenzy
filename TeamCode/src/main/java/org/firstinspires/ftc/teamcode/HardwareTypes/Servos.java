@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public enum Servos {
 
+    BASKET("basket", Servo.Direction.FORWARD, ServoTypes.INDEPENDENT),
     CARGO_GATE("cargo gate", Servo.Direction.FORWARD, ServoTypes.INDEPENDENT),
     INTAKE("intake throw", Servo.Direction.REVERSE, ServoTypes.INDEPENDENT);
 

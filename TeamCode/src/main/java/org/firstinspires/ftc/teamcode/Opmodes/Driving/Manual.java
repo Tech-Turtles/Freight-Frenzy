@@ -37,10 +37,13 @@ public class Manual extends RobotHardware {
     public static double lateralSpeed = 1.0;
     public static double rotationSpeed = 0.8;
     public static double intakeSpeed = 0.85;
-    public static double carouselSpeed = 0.55;
+    public static double carouselSpeed = 0.75;
     public static double cranePower = 0;
     public static int direction = 1;
     public static ServoPosition cargoPosition = Configuration.ServoPosition.INTAKE;
+    public static double cargoClose = 0.0;
+    public static double cargoOpen = 0.35;
+
 
     private final Executive.StateMachine<Manual> stateMachine;
     private TrajectoryRR trajectoryRR;
@@ -68,6 +71,7 @@ public class Manual extends RobotHardware {
         stateMachine.init();
         headingController.setInputBounds(-Math.PI, Math.PI);
         mecanumDrive = new SampleMecanumDrive(hardwareMap, this);
+        servoUtility.setAngle(Servos.INTAKE, intakeRetract);
 //        trajectoryRR = new TrajectoryRR(this.mecanumDrive);
     }
 
@@ -80,6 +84,7 @@ public class Manual extends RobotHardware {
     public void start() {
         super.start();
         mecanumDrive.setPoseEstimate(new Pose2d());
+        servoUtility.setAngle(Servos.INTAKE, intakeRetract + 0.2);
     }
 
     @Override
@@ -130,7 +135,7 @@ public class Manual extends RobotHardware {
         if(primary.XOnce()) {
             servoUtility.setAngle(Servos.INTAKE, Range.clip(intakeExtend, 0, 1));
         } else if(primary.BOnce()) {
-            servoUtility.setAngle(Servos.INTAKE, Range.clip(intakeRetract, 0, 1));
+            servoUtility.setAngle(Servos.INTAKE, Range.clip(intakeRetract + 0.2, 0, 1));
         }
 
         switch (currentDriveMode) {
@@ -167,27 +172,36 @@ public class Manual extends RobotHardware {
             switch (cargoPosition) {
                 case INTAKE:
                     cargoPosition = ServoPosition.CRADLE;
+                    servoUtility.setAngle(Servos.CARGO_GATE, cargoClose);
                     break;
                 case CRADLE:
                     cargoPosition = ServoPosition.DROP;
+                    servoUtility.setAngle(Servos.CARGO_GATE, cargoOpen);
                     break;
                 case DROP:
                     cargoPosition = ServoPosition.INTAKE;
+                    servoUtility.setAngle(Servos.CARGO_GATE, cargoOpen);
             }
         } else if(secondary.leftBumperOnce()) {
             switch (cargoPosition) {
                 case INTAKE:
                     cargoPosition = ServoPosition.DROP;
+                    servoUtility.setAngle(Servos.CARGO_GATE, cargoOpen);
                     break;
                 case CRADLE:
                     cargoPosition = ServoPosition.INTAKE;
+                    servoUtility.setAngle(Servos.CARGO_GATE, cargoOpen);
                     break;
                 case DROP:
                     cargoPosition = ServoPosition.CRADLE;
+                    servoUtility.setAngle(Servos.CARGO_GATE, cargoClose);
             }
         }
-
-        servoUtility.setAngle(Servos.CARGO_GATE, cargoPosition.getPos());
+        if(secondary.dpadUpOnce()) {
+            servoUtility.setAngle(Servos.CARGO_GATE, cargoOpen);
+        } else if(secondary.dpadDownOnce())
+            servoUtility.setAngle(Servos.CARGO_GATE, cargoClose);
+        servoUtility.setAngle(Servos.BASKET, cargoPosition.getPos());
         servoUtility.setPower(ContinuousServo.CRANE, secondary.right_stick_y);
 
         if(secondary.right_trigger > deadzone)
@@ -199,10 +213,12 @@ public class Manual extends RobotHardware {
 
         if(Math.abs(secondary.left_stick_y) > 0.2)
             stateMachine.changeState(LAUNCHER, new ArmManual());
+        else if(secondary.XOnce())
+            stateMachine.changeState(LAUNCHER, new ArmGrab());
         else if(secondary.AOnce())
             stateMachine.changeState(LAUNCHER, new ArmIntake());
-        else if(secondary.XOnce())
-            stateMachine.changeState(LAUNCHER, new ArmDrive());
+//        else if(secondary.XOnce())
+//            stateMachine.changeState(LAUNCHER, new ArmDrive());
         else if(secondary.BOnce())
             stateMachine.changeState(LAUNCHER, new ArmLow());
         else if(secondary.YOnce())
@@ -292,6 +308,20 @@ public class Manual extends RobotHardware {
                 }
             } else {
                 opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, armPos, 1.0);
+            }
+        }
+    }
+
+    static class ArmGrab extends Executive.StateBase<Manual> {
+        @Override
+        public void update() {
+            super.update();
+            if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
+                opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
+            else {
+                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS + 300, 1.0);
+                cargoPosition = ServoPosition.CRADLE;
+                opMode.servoUtility.setAngle(Servos.CARGO_GATE, cargoClose);
             }
         }
     }

@@ -22,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_LOW_POS;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_MIDDLE_POS;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_PICKUP_POS;
 import static org.firstinspires.ftc.teamcode.Utility.RobotHardware.df;
+import static org.firstinspires.ftc.teamcode.Utility.RobotHardware.df_precise;
 
 @Config
 public class RobotStateContext implements Executive.RobotStateMachineContextInterface {
@@ -156,7 +157,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
 
             switch (opMode.initializationDetectionAmount) {
                 case LEFT:
-                    level = allianceColor.equals(AllianceColor.BLUE) ? ShippingHubLevel.BOTTOM : ShippingHubLevel.BOTTOM;
+                    level = ShippingHubLevel.BOTTOM;
                     break;
                 case RIGHT:
                     level = ShippingHubLevel.MIDDLE;
@@ -187,7 +188,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         public void update() {
             super.update();
             if(!opMode.mecanumDrive.isIdle()) {
-                opMode.servoUtility.setAngle(Servos.CARGO_GATE, Configuration.ServoPosition.CRADLE.getPos());
+                opMode.servoUtility.setAngle(Servos.BASKET, Configuration.ServoPosition.CRADLE.getPos());
                 if (stateTimer.seconds() > 0.3)
                     opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 1.0);
                 return;
@@ -197,7 +198,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                 nextState(LAUNCHER, new LiftHubLevel(level));
 
             if(stateMachine.getStateReferenceByType(LAUNCHER).isDone) {
-                opMode.servoUtility.setAngle(Servos.CARGO_GATE, Configuration.ServoPosition.DROP.getPos());
+                opMode.servoUtility.setAngle(Servos.BASKET, Configuration.ServoPosition.DROP.getPos());
                 if(!isDone) {
                     stateTimer.reset();
                     isDone = true;
@@ -263,7 +264,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
         @Override
         public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
             super.init(stateMachine);
-            opMode.servoUtility.setAngle(Servos.CARGO_GATE, Configuration.ServoPosition.INTAKE.getPos());
+            opMode.servoUtility.setAngle(Servos.BASKET, Configuration.ServoPosition.INTAKE.getPos());
         }
 
         @Override

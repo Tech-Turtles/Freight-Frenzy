@@ -126,8 +126,8 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
 
                 shippingHubAlign = Pose2d(-12.0, -49.625, (-90.0).toRadians)
                 shippingHub = Pose2d(-12.0, -41.375, (-90.0).toRadians)
-                carouselAlign = Pose2d(-48.0,-61.0,(270.0).toRadians)
-                carousel = Pose2d(-57.75,-61.0,(270.0).toRadians)
+                carouselAlign = Pose2d(-57.5,-47.0,(90.0).toRadians)
+                carousel = Pose2d(-57.75,-60.0,(90.0).toRadians)
                 depotPark = Pose2d(-61.0,-36.5,(0.0).toRadians)
 
                 val startToHub: Trajectory = trajectoryBuilder(startCarousel, true)
