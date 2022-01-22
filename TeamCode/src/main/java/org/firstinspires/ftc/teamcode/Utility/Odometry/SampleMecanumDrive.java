@@ -179,6 +179,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // If desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
+//        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
@@ -242,6 +243,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public void update(TelemetryPacket packet) {
         updatePoseEstimate();
+
 
         Pose2d currentPose = getPoseEstimate();
         Pose2d lastError = getLastError();
@@ -427,6 +429,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
     public double getRawExternalHeading() {
         return imu.getAngularOrientation().firstAngle;
+//        return 0;
     }
 
     double getBatteryVoltage(HardwareMap hardwareMap) {
