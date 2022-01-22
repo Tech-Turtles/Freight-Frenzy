@@ -212,17 +212,17 @@ public class Manual extends RobotHardware {
             motorUtility.setPower(Motors.CAROUSEL, 0);
 
         if(Math.abs(secondary.left_stick_y) > 0.2)
-            stateMachine.changeState(LAUNCHER, new ArmManual());
+            stateMachine.changeState(SLIDE, new ArmManual());
         else if(secondary.XOnce())
-            stateMachine.changeState(LAUNCHER, new ArmGrab());
+            stateMachine.changeState(SLIDE, new ArmGrab());
         else if(secondary.AOnce())
-            stateMachine.changeState(LAUNCHER, new ArmIntake());
+            stateMachine.changeState(SLIDE, new ArmIntake());
 //        else if(secondary.XOnce())
 //            stateMachine.changeState(LAUNCHER, new ArmDrive());
         else if(secondary.BOnce())
-            stateMachine.changeState(LAUNCHER, new ArmLow());
+            stateMachine.changeState(SLIDE, new ArmLow());
         else if(secondary.YOnce())
-            stateMachine.changeState(LAUNCHER, new ArmHigh());
+            stateMachine.changeState(SLIDE, new ArmHigh());
     }
 
     void displayTelemetry() {
@@ -250,7 +250,7 @@ public class Manual extends RobotHardware {
         public void update() {
             super.update();
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
-                opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
+                opMode.stateMachine.changeState(SLIDE, new ArmManual());
             else
                 opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_PICKUP_POS, 0.8);
         }
@@ -261,7 +261,7 @@ public class Manual extends RobotHardware {
         public void update() {
             super.update();
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
-                opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
+                opMode.stateMachine.changeState(SLIDE, new ArmManual());
             else
                 opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 0.8);
         }
@@ -272,7 +272,7 @@ public class Manual extends RobotHardware {
         public void update() {
             super.update();
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
-                opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
+                opMode.stateMachine.changeState(SLIDE, new ArmManual());
             else
                 opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_HIGH_POS, 0.8);
         }
@@ -283,7 +283,7 @@ public class Manual extends RobotHardware {
         public void update() {
             super.update();
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
-                opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
+                opMode.stateMachine.changeState(SLIDE, new ArmManual());
             else
                 opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 0.8);
         }
@@ -317,7 +317,7 @@ public class Manual extends RobotHardware {
         public void update() {
             super.update();
             if(Math.abs(opMode.secondary.left_stick_y) > 0.2)
-                opMode.stateMachine.changeState(LAUNCHER, new ArmManual());
+                opMode.stateMachine.changeState(SLIDE, new ArmManual());
             else {
                 opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS + 300, 1.0);
                 cargoPosition = ServoPosition.CRADLE;

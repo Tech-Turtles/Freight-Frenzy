@@ -14,20 +14,24 @@ import kotlin.math.sqrt
 class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
     val drive: SampleMecanumDrive = sampleMecanumDrive
 
+    var startWarehouse = Pose2d(9.5, 61.75, 90.0.toRadians)
     var startCarousel = Pose2d(-27.875, 61.75, (90.0).toRadians)
-    private var shippingHubAlign = Pose2d(-12.0, 49.625, (90.0).toRadians)
+    private var shippingHubAlign = Pose2d(-12.0, 48.625, (90.0).toRadians)
     private var shippingHub = Pose2d(-12.0, 41.375, (90.0).toRadians)
-    private var carouselAlign = Pose2d(-48.0,61.0,(270.0).toRadians)
-    private var carousel = Pose2d(-57.75,61.0,(270.0).toRadians)
+    private var verticalBarrierAlign = Pose2d(6.5, 63.0, 0.0.toRadians)
+    private var carouselAlign = Pose2d(-52.0,58.0,(270.0).toRadians)
+    private var carousel = Pose2d(-57.0,58.0,(270.0).toRadians)
     private var depotPark = Pose2d(-61.0,36.5,(0.0).toRadians)
 
-
-    var trajectoryStartToHub: Trajectory? = null
+    var trajectoryCarouselStartToHub: Trajectory? = null
+    var trajectoryWarehouseStartToHub: Trajectory? = null
     var trajectoryHubToCarousel: Trajectory? = null
     var trajectoryHubToDepotPark: Trajectory? = null
     var trajectoryCarouselToDepot: Trajectory? = null
     var trajectoryStartToCarousel: Trajectory? = null
     var trajectoryCarouselToHub: Trajectory? = null
+    var trajectoryHubToVerticalBarrier: Trajectory? = null
+    var trajectoryVerticalBarrierToWarehouse: Trajectory? = null
 
     private var velocityConstraint: TrajectoryVelocityConstraint? = null
     private var accelerationConstraint: TrajectoryAccelerationConstraint? = null
@@ -126,15 +130,15 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
 
                 shippingHubAlign = Pose2d(-12.0, -49.625, (-90.0).toRadians)
                 shippingHub = Pose2d(-12.0, -41.375, (-90.0).toRadians)
-                carouselAlign = Pose2d(-57.5,-47.0,(90.0).toRadians)
-                carousel = Pose2d(-57.75,-60.0,(90.0).toRadians)
+                carouselAlign = Pose2d(-57.5,-50.0,(90.0).toRadians)
+                carousel = Pose2d(-57.75,-56.5,(90.0).toRadians)
                 depotPark = Pose2d(-61.0,-36.5,(0.0).toRadians)
 
                 val startToHub: Trajectory = trajectoryBuilder(startCarousel, true)
                         .splineToConstantHeading(shippingHubAlign.vec(), (90.0).toRadians)
                         .lineToConstantHeading(shippingHub.vec(), slowVelocityConstraint, slowAccelerationConstraint)
                         .build()
-                this.trajectoryStartToHub = startToHub
+                this.trajectoryCarouselStartToHub = startToHub
 
                 val hubToCarousel: Trajectory = trajectoryBuilder(startToHub.end(), true)
                         .lineToConstantHeading(shippingHubAlign.vec())
@@ -154,17 +158,17 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
                         .build()
                 this.trajectoryHubToDepotPark = hubToDepotPark
             } else -> {
-                val startToHub: Trajectory = trajectoryBuilder(startCarousel, true)
+                val carouselStartToHub: Trajectory = trajectoryBuilder(startCarousel, true)
                         .splineToConstantHeading(shippingHubAlign.vec(), (-90.0).toRadians)
                         .lineToConstantHeading(shippingHub.vec(), slowVelocityConstraint, slowAccelerationConstraint)
                         .build()
-                this.trajectoryStartToHub = startToHub
+                this.trajectoryCarouselStartToHub = carouselStartToHub
 
-                val hubToCarousel: Trajectory = trajectoryBuilder(startToHub.end(), false)
+                val hubToCarousel: Trajectory = trajectoryBuilder(carouselStartToHub.end(), false)
                         .lineToConstantHeading(shippingHubAlign.vec())
                         .splineTo(shippingHubAlign.vec().plus(Vector2d(1.0,1.0)), 0.0)
                         .splineToConstantHeading(carouselAlign.vec(), 0.0)
-                        .splineToConstantHeading(carousel.vec(),0.0)
+                        .splineToConstantHeading(carousel.vec(),0.0, slowVelocityConstraint, slowAccelerationConstraint)
                         .build()
                 this.trajectoryHubToCarousel = hubToCarousel
 
@@ -172,6 +176,24 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
                         .lineToConstantHeading(depotPark.vec())
                         .build()
                 this.trajectoryCarouselToDepot = carouselToDepotPark
+
+                val warehouseStartToHub: Trajectory = trajectoryBuilder(startWarehouse, true)
+                        .splineToConstantHeading(shippingHubAlign.vec(), (-90.0).toRadians)
+                        .lineToConstantHeading(shippingHub.vec(), slowVelocityConstraint, slowAccelerationConstraint)
+                        .build()
+                this.trajectoryWarehouseStartToHub = warehouseStartToHub
+
+                val hubToVerticalBarrier: Trajectory = trajectoryBuilder(warehouseStartToHub.end(), false)
+                        .splineToConstantHeading(shippingHubAlign.vec(), (-90.0).toRadians)
+                        .splineToSplineHeading(verticalBarrierAlign, 0.0)
+                        .forward(20.0)
+                        .build()
+                this.trajectoryHubToVerticalBarrier = hubToVerticalBarrier
+
+                val verticalBarrierToWarehouse: Trajectory = trajectoryBuilder(hubToVerticalBarrier.end(), false)
+                        .forward(8.0, slowVelocityConstraint, slowAccelerationConstraint)
+                        .build()
+                this.trajectoryVerticalBarrierToWarehouse = verticalBarrierToWarehouse
             }
         }
     }

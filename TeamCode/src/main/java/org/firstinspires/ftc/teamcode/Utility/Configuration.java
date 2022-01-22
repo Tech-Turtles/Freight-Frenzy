@@ -11,9 +11,9 @@ public class Configuration {
     public static final double ROBOT_LENGTH = 17.0;
     public static final double ROBOT_WIDTH = 17.25;
     public static int ARM_DRIVE_POS = 1300;
-    public static int ARM_MIDDLE_POS = 800;
+    public static int ARM_MIDDLE_POS = 800 + 300;
     public static int ARM_HIGH_POS = 1730;
-    public static int ARM_LOW_POS = 350;
+    public static int ARM_LOW_POS = 350 + 75 + 100 + 100;
     public static int ARM_PICKUP_POS = 0;
     public static int ARM_MAX = 1800;
     public static double intakeExtend = 0.4;

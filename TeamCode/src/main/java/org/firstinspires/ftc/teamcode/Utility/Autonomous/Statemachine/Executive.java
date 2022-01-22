@@ -40,9 +40,9 @@ public class Executive {
          */
         public enum StateType {
             DRIVE,
-            LAUNCHER,
+            SLIDE,
             INTAKE,
-            WOBBLE
+            CAROUSEL
         }
 
         public StateMachine(T_opmode opMode) {
