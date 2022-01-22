@@ -17,10 +17,13 @@ import org.firstinspires.ftc.teamcode.Utility.Vision.DetectionAmount;
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.DRIVE;
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.SLIDE;
 import static org.firstinspires.ftc.teamcode.Utility.Autonomous.Statemachine.Executive.StateMachine.StateType.CAROUSEL;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_DRIVE_POS;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_HIGH_POS;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_LOW_POS;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_MIDDLE_POS;
 import static org.firstinspires.ftc.teamcode.Utility.Configuration.ARM_PICKUP_POS;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.intakeExtend;
+import static org.firstinspires.ftc.teamcode.Utility.Configuration.intakeRetract;
 import static org.firstinspires.ftc.teamcode.Utility.RobotHardware.df;
 
 @Config
@@ -240,7 +243,7 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
                 if (stateTimer.seconds() > 0.3) {
                     opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS, 1.0);
                     //Todo Make this position a variable in Configuration.
-                    opMode.servoUtility.setAngle(Servos.CARGO_GATE, 0.35);
+                    opMode.servoUtility.setAngle(Servos.CARGO_GATE, 0.0);
                 }
                 return;
             }
@@ -250,13 +253,14 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
 
             if(stateMachine.getStateReferenceByType(SLIDE).isDone) {
                 opMode.servoUtility.setAngle(Servos.BASKET, Configuration.ServoPosition.DROP.getPos());
+                opMode.servoUtility.setAngle(Servos.CARGO_GATE, 0.35);
                 if(!isDone) {
                     stateTimer.reset();
                     isDone = true;
                 }
-                if(stateTimer.seconds() > 2.0) {
-                    nextState(SLIDE, new ResetLiftToIntake());
+                if(stateTimer.seconds() > 0.75) {
                     nextState(DRIVE, new HubToVerticalBarrier());
+                    nextState(SLIDE, new ResetLiftToIntake());
                 }
 
             }
@@ -285,15 +289,116 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
             super.init(stateMachine);
             opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryVerticalBarrierToWarehouse());
             opMode.servoUtility.setAngle(Servos.BASKET, Configuration.ServoPosition.INTAKE.getPos());
+            nextState(SLIDE, new IntakeCargo());
         }
 
         @Override
         public void update() {
             super.update();
+            if(opMode.mecanumDrive.isBusy()) return;
+            if(!stateMachine.getCurrentStateByType(SLIDE).equals(PickupCargo.class))
+                nextState(SLIDE, new PickupCargo());
+            if(stateMachine.getStateReferenceByType(SLIDE).isDone)
+                nextState(DRIVE, new WarehouseThroughVerticalBarrier());
+        }
+    }
+
+    class WarehouseThroughVerticalBarrier extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryWarehouseThroughVerticalBarrier());
+            opMode.motorUtility.setPower(Motors.INTAKE, 0.0);
+            nextState(SLIDE, new ArmDrive());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            if(opMode.mecanumDrive.isIdle())
+                nextState(DRIVE, new VerticalBarrierToHubAlign());
+        }
+    }
+
+    class VerticalBarrierToHubAlign extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryVerticalBarrierToHubAlign());
+            nextState(SLIDE, new LiftHubLevel(ShippingHubLevel.TOP));
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            if(opMode.mecanumDrive.isIdle())
+                nextState(DRIVE, new SecondCargoHubAlignToDrop());
+        }
+    }
+
+    class SecondCargoHubAlignToDrop extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectorySecondCargoHubAlignToDrop());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            if(opMode.mecanumDrive.isBusy()) return;
+            if(stateMachine.getStateReferenceByType(SLIDE).isDone) {
+                opMode.servoUtility.setAngle(Servos.BASKET, Configuration.ServoPosition.DROP.getPos());
+                opMode.servoUtility.setAngle(Servos.CARGO_GATE, 0.35);
+                if(!isDone) {
+                    stateTimer.reset();
+                    isDone = true;
+                }
+                if(stateTimer.seconds() > 0.5) {
+                    nextState(DRIVE, new HubToWarehousePark());
+                }
+
+            }
+        }
+    }
+
+    class HubToWarehousePark extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void init(Executive.StateMachine<AutoOpmode> stateMachine) {
+            super.init(stateMachine);
+            opMode.mecanumDrive.followTrajectoryAsync(trajectoryRR.getTrajectoryHubToWarehousePark());
+            nextState(SLIDE, new ResetLiftToIntake());
+        }
+
+        @Override
+        public void update() {
+            super.update();
+            if(opMode.mecanumDrive.isBusy()) return;
+            nextState(DRIVE, new Stop());
+        }
+    }
+
+    static class IntakeCargo extends Executive.StateBase<AutoOpmode> {
+        @Override
+        public void update() {
+            super.update();
             opMode.motorUtility.setPower(Motors.INTAKE, 0.7);
-            if(opMode.mecanumDrive.isIdle()) {
-                opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_LOW_POS + 300, 1.0);
+            opMode.servoUtility.setAngle(Servos.INTAKE, intakeExtend);
+            isDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_PICKUP_POS, 1.0);
+        }
+    }
+
+    static class PickupCargo extends Executive.StateBase<AutoOpmode> {
+        double intakeTime = 0.3;
+        @Override
+        public void update() {
+            super.update();
+            opMode.servoUtility.setAngle(Servos.INTAKE, intakeRetract);
+            if(stateTimer.seconds() > intakeTime) {
+                isDone = opMode.motorUtility.goToPosition(Motors.SLIDE_ARM, ARM_DRIVE_POS, 1.0);
+                opMode.servoUtility.setAngle(Servos.BASKET, Configuration.ServoPosition.CRADLE.getPos());
                 opMode.servoUtility.setAngle(Servos.CARGO_GATE, 0.0);
+                opMode.motorUtility.setPower(Motors.INTAKE, -0.7);
             }
         }
     }
@@ -344,7 +449,8 @@ public class RobotStateContext implements Executive.RobotStateMachineContextInte
     }
 
     static class ResetLiftToIntake extends Executive.StateBase<AutoOpmode> {
-        double craneTime = 1.8;
+        //Todo Decrease this time?
+        double craneTime = 1.6;
         boolean aBoolean = false;
         @Override
         public void init(Executive.StateMachine<AutoOpmode> stateMachine) {

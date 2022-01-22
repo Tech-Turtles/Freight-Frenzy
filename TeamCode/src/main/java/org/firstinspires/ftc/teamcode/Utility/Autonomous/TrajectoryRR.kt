@@ -18,7 +18,7 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
     var startCarousel = Pose2d(-27.875, 61.75, (90.0).toRadians)
     private var shippingHubAlign = Pose2d(-12.0, 48.625, (90.0).toRadians)
     private var shippingHub = Pose2d(-12.0, 41.375, (90.0).toRadians)
-    private var verticalBarrierAlign = Pose2d(6.5, 63.0, 0.0.toRadians)
+    private var verticalBarrierAlign = Pose2d(6.5, 65.0, 0.0.toRadians)
     private var carouselAlign = Pose2d(-52.0,58.0,(270.0).toRadians)
     private var carousel = Pose2d(-57.0,58.0,(270.0).toRadians)
     private var depotPark = Pose2d(-61.0,36.5,(0.0).toRadians)
@@ -32,6 +32,10 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
     var trajectoryCarouselToHub: Trajectory? = null
     var trajectoryHubToVerticalBarrier: Trajectory? = null
     var trajectoryVerticalBarrierToWarehouse: Trajectory? = null
+    var trajectoryWarehouseThroughVerticalBarrier: Trajectory? = null
+    var trajectoryVerticalBarrierToHubAlign: Trajectory? = null
+    var trajectorySecondCargoHubAlignToDrop: Trajectory? = null
+    var trajectoryHubToWarehousePark: Trajectory? = null
 
     private var velocityConstraint: TrajectoryVelocityConstraint? = null
     private var accelerationConstraint: TrajectoryAccelerationConstraint? = null
@@ -39,11 +43,15 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
     private var slowAccelerationConstraint: TrajectoryAccelerationConstraint? = null
     private var ringVelocityConstraint: TrajectoryVelocityConstraint? = null
     private var ringAccelerationConstraint: TrajectoryAccelerationConstraint? = null
+    private var superVelocityConstraint: TrajectoryVelocityConstraint? = null
+    private var superAccelerationConstraint: TrajectoryAccelerationConstraint? = null
 
-    private val slowVelocity: Double = 10.0
+    private val slowVelocity: Double = 18.0
     private val slowAcceleration: Double = 40.0
     private val ringVelocity: Double = 60.0
     private val ringAcceleration: Double = 40.0
+    private val superVelocity: Double = 75.0
+    private val superAcceleration: Double = 40.0
 
     val list = ArrayList<Trajectory>()
 
@@ -56,6 +64,9 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
 
         ringVelocityConstraint = getMinVelocityConstraint(ringVelocity)
         ringAccelerationConstraint = getMinAccelerationConstraint(ringAcceleration)
+
+        superVelocityConstraint = getMinVelocityConstraint(superVelocity)
+        superAccelerationConstraint = getMinAccelerationConstraint(superAcceleration)
 
         buildTrajectories(AllianceColor.NONE)
     }
@@ -184,16 +195,41 @@ class TrajectoryRR constructor(sampleMecanumDrive: SampleMecanumDrive){
                 this.trajectoryWarehouseStartToHub = warehouseStartToHub
 
                 val hubToVerticalBarrier: Trajectory = trajectoryBuilder(warehouseStartToHub.end(), false)
-                        .splineToConstantHeading(shippingHubAlign.vec(), (-90.0).toRadians)
-                        .splineToSplineHeading(verticalBarrierAlign, 0.0)
-                        .forward(20.0)
+                        .lineToConstantHeading(shippingHubAlign.vec())
+                        .splineToSplineHeading(shippingHubAlign.plus(Pose2d(0.1,0.0, (-90.0).toRadians)), (-30.0).toRadians)
+                        .splineToConstantHeading(verticalBarrierAlign.vec(), 0.0)
+                        .forward(30.0)
                         .build()
                 this.trajectoryHubToVerticalBarrier = hubToVerticalBarrier
 
                 val verticalBarrierToWarehouse: Trajectory = trajectoryBuilder(hubToVerticalBarrier.end(), false)
-                        .forward(8.0, slowVelocityConstraint, slowAccelerationConstraint)
+                        .forward(14.0, slowVelocityConstraint, slowAccelerationConstraint)
                         .build()
                 this.trajectoryVerticalBarrierToWarehouse = verticalBarrierToWarehouse
+
+                val warehousePastVerticalBarrier: Trajectory = trajectoryBuilder(verticalBarrierToWarehouse.end(), false)
+                        .back(50.0)
+                        .build()
+                this.trajectoryWarehouseThroughVerticalBarrier = warehousePastVerticalBarrier
+
+                val verticalBarrierToHubAlign: Trajectory = trajectoryBuilder(warehousePastVerticalBarrier.end(), false)
+                        .strafeRight(10.0)
+                        .splineToSplineHeading(warehousePastVerticalBarrier.end().plus(Pose2d(0.1,-10.0, (90.0).toRadians)), (160.0).toRadians)
+                        .build()
+                this.trajectoryVerticalBarrierToHubAlign = verticalBarrierToHubAlign
+
+                val secondCargoHubAlignToDrop: Trajectory = trajectoryBuilder(verticalBarrierToHubAlign.end(), false)
+                        .lineToConstantHeading(shippingHub.vec().plus(Vector2d(3.0, 2.0)))
+                        .build()
+                this.trajectorySecondCargoHubAlignToDrop = secondCargoHubAlignToDrop
+
+            val hubToWarehousePark: Trajectory = trajectoryBuilder(warehouseStartToHub.end(), false)
+                    .lineToConstantHeading(shippingHubAlign.vec())
+                    .splineToSplineHeading(shippingHubAlign.plus(Pose2d(0.1,0.0, (-90.0).toRadians)), (-30.0).toRadians)
+                    .splineToConstantHeading(verticalBarrierAlign.vec().plus(Vector2d(0.0, 2.0)), 0.0, superVelocityConstraint, superAccelerationConstraint)
+                    .forward(40.0, superVelocityConstraint, superAccelerationConstraint)
+                    .build()
+            this.trajectoryHubToWarehousePark = hubToWarehousePark
             }
         }
     }
